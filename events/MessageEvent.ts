@@ -15,11 +15,6 @@ export const MessageEvent = new TrollEvent(client, {
     const flags = data.filter(a => /^-{1,2}/.test(a));
     const commandName = data[0].replace(client.config.suffix, '')
     const command: TrollCommand = client.commands.get([commandName]);
-    /*const flags = message.content.toLowerCase().split(/ +/g).reduce((flags, flag) => {
-      const match = /^--([^=]+)(?:=(.*))?/.exec(flag);
-      if (match) flags[match[1]] = match[2] ?? true;
-      return flags;
-    }, {});*/
     console.log(
       {
         args: args,
