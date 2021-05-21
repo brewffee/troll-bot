@@ -30,7 +30,7 @@ export class TrollClient extends Client {
           this.on(event.info.type, event.info.run.bind(null, this)) 
         })
       })
-    this.login('ODQ1MzY4ODg3ODgwMzE4OTc3.YKf9IQ.zMiPPLKCeBdT3uHzbRsbQEQL1SM')
+    this.login(process.env.TOKEN)
     }
   }
 }
