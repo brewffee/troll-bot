@@ -1,4 +1,4 @@
-import { DiscordAPIError, Message, MessageOptions, PermissionResolvable, Permissions } from "discord.js";
+import { Message, PermissionResolvable } from "discord.js";
 import { TrollClient } from './TrollClient';
 
 interface CommandOptions {
@@ -48,10 +48,3 @@ export class TrollCommand {
     }
   }
 }
-
-export interface Result {
-  code: string,
-  details?: string,
-  error?: Error | DiscordAPIError,
-}
-
