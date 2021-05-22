@@ -1,7 +1,7 @@
+// JS CODE
 const { Client, MessageAttachment, Intents, version } = require('discord.js');
 console.log(version);
 const TrollClient = new Client({ intents: Intents.ALL });
-const stop = () => { try { await (() => { throw new Error() }) } catch { null }};
 TrollClient.autoResponses = [
   [/y((o+u'?r+e?)|(o+|e|a))( are)? m((o+ther+)|(o+|u)m)(m+y+)?/gi, 'i am doing your mother', 'https://pbs.twimg.com/media/E0qYJZLWYAE6_7C.png'],
   [/bu+s{2,}y+/gi, 'hnng <:cum:841142405846925312>', null],
@@ -45,7 +45,7 @@ TrollClient.on('guildMemberRemove', (member) => {
 });
 
 TrollClient.on('message', async (message) => {
-  if (message.content === '<:troll:841760436042203138>test') return message.reply('helo', { allowedMentions: { repliedUser: false }})
+  if (message.content === 'test<:troll:841760436042203138>') return message.reply('helo', { allowedMentions: { repliedUser: false }})
   if (message.content === '<:troll:841760436042203138>help') return message.channel.send('hi im troll. i do nothing rn lol get fucked')
 });
 
@@ -80,5 +80,4 @@ TrollClient.on('message', async (message) => {
     console.log(error.message);
   }
 });
-
-TrollClient.login(/* no */);
+TrollClient.login(process.env.DISCORD_TOKEN);
