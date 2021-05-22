@@ -10,7 +10,7 @@ export const AvatarCommand = new TrollCommand(client, {
   nsfw: false,
   arguments: [{ name: 'User', type: 'USER' }],
   run: async (message: Message, args: [User], flags: Map<string, string>): Promise<Result | undefined> => {
-    console.log(args);
+    message.channel.send(args[0].displayAvatarURL());
 
     return undefined;
   },
