@@ -1,4 +1,4 @@
-import { Emoji, EmojiResolvable, Guild, GuildEmoji, Message, MessageAttachment, MessageOptions, PermissionResolvable, Permissions, ReactionEmoji } from 'discord.js';
+import { EmojiResolvable, MessageAttachment } from 'discord.js';
 import { TrollClient } from './TrollClient';
 
 interface EventOptions {

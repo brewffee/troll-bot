@@ -1,6 +1,7 @@
 import { Client, Collection, Intents } from 'discord.js';
 import { readdir } from 'fs';
 import { TrollCommand } from './TrollCommand';
+import { TrollEvent } from './TrollEvent';
 
 interface TrollConfig {
   suffix: string;
