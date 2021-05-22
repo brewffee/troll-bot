@@ -16,19 +16,15 @@ export class TrollClient extends Client {
       this.config = config;
       readdir(`./out/commands`, (err, files) => {
         if (err) throw err;
-        files
-          .filter((f) => f.endsWith('.js'))
-          .forEach((file) => {
+        files.filter((f) => f.endsWith('.js')).forEach((file) => {
             const command = Object.values(require(`./commands/${file}`))[0] as TrollCommand;
             this.commands.set(command.info.name, command);
           });
       });
       readdir('./out/events', (err, files) => {
         if (err) throw err;
-        files
-          .filter((f) => f.endsWith('.js'))
-          .forEach((file) => {
-            const event = Object.values(require(`./events/${file}`))[0] as any;
+        files.filter((f) => f.endsWith('.js')).forEach((file) => {
+            const event = Object.values(require(`./events/${file}`))[0] as TrollEvent;
             this.on(event.info.type, event.info.run.bind(null, this));
           });
       });
