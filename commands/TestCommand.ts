@@ -1,9 +1,9 @@
-import { Message } from 'discord.js';
-import { TrollClient, client } from '../TrollClient';
-import { TrollCommand, Result } from '../TrollCommand';
+import { client } from '../TrollClient';
+import { TrollCommand } from '../TrollCommand';
 
 export const TestCommand = new TrollCommand(client, {
-  names: ['test', 'alias'],
+  name: 'test',
+  aliases: ['alias'],
   description: 'emj',
   argCount: undefined,
   usage: '',

@@ -7,12 +7,11 @@ interface TrollConfig {
 }
 
 export class TrollClient extends Client {
-  public commands: Collection<string[], any>;
+  public commands = new Collection<string, TrollCommand>();
   public load: Function;
   public config!: TrollConfig;
   constructor() {
     super({ intents: Intents.ALL });
-    this.commands = new Collection();
     this.load = (config: TrollConfig) => {
       this.config = config;
       readdir(`./out/commands`, (err, files) => {
@@ -21,7 +20,7 @@ export class TrollClient extends Client {
           .filter((f) => f.endsWith('.js'))
           .forEach((file) => {
             const command = Object.values(require(`./commands/${file}`))[0] as TrollCommand;
-            this.commands.set(command.info.names, command.info.run);
+            this.commands.set(command.info.name, command);
           });
       });
       readdir('./out/events', (err, files) => {

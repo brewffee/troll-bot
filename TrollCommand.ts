@@ -2,8 +2,9 @@ import { DiscordAPIError, GuildChannel, GuildMember, Message, PermissionResolvab
 import { TrollClient } from './TrollClient';
 
 interface CommandOptions {
-  names: string[];
+  name: string;
   description: string;
+  aliases?: string[];
   argCount?: [number, string];
   usage: string;
   nsfw?: boolean;
@@ -18,19 +19,18 @@ interface CommandOptions {
     mods?: boolean;
   };
   arguments?: Argument[];
-  run: (message: Message, args: ArgumentType[], flags: Map<string, string>) => Promise<Result | undefined>;
+  run: (message: Message, args: any, flags: Map<string, string>) => Promise<Result | undefined>;
 }
 
 export class TrollCommand {
   public info: CommandOptions;
-  public arguments: Argument[];
   public isAuthorized: Function;
   public run: Function;
   constructor(client: TrollClient, info: CommandOptions) {
     Object.defineProperty(this, 'client', { value: client, enumerable: false });
     this.info = info;
+    this.info.arguments = info.arguments?.map((argument) => ({ required: true, ...argument })) ?? [];
     this.run = info.run;
-    this.arguments = info.arguments?.map((argument) => ({ required: true, ...argument })) ?? [];
     this.isAuthorized = ({ member, guild }: Message): boolean => {
       let authorized: boolean = false;
       if (!this.info.accessibility) {

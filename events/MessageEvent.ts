@@ -20,8 +20,8 @@ export const MessageEvent = new TrollEvent(client, {
       },
       [new Array(), new Map()]
     );
-    const commandName = data[0].replace(client.config.suffix, '');
-    const command: TrollCommand = client.commands.get([commandName]);
+    const commandName = data[0].replace(client.config.suffix, '').toLowerCase();
+    const command = client.commands.get(commandName) ?? client.commands.find(({ info: { aliases } }) => !!aliases?.includes(commandName));
     console.log({
       args: args,
       commandName: commandName,
@@ -38,7 +38,7 @@ export const MessageEvent = new TrollEvent(client, {
 
 const resolveArguments = (args: string[], command: TrollCommand, message: Message): Promise<ArgumentType>[] => {
   return args.map(async (argument: string, index) => {
-    const argumentType = command.arguments[index]?.type;
+    const argumentType = command.info.arguments![index]?.type;
     if (!argumentType) return null;
 
     if (argumentType === 'STRING') return argument;
