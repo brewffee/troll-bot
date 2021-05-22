@@ -11,7 +11,7 @@ export const MessageEvent = new TrollEvent(client, {
     if (message.author.bot) return;
     const data = message.content.split(/ +/g);
     if (!data[0].endsWith(client.config.suffix)) return console.log('does not! emit response');
-    const [args, flags] = data.reduce(
+    const [args, flags] = data.slice(1).reduce(
       ([args, flags], argument) => {
         const match = /^(--?)([\w\d]+)(?:=(.+))?$/.exec(argument);
         if (match) flags?.set(match[2].toLowerCase(), match[3] || true);
