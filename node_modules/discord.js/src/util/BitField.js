@@ -41,7 +41,6 @@ class BitField {
    * @returns {boolean}
    */
   has(bit) {
-    if (Array.isArray(bit)) return bit.every(p => this.has(p));
     bit = this.constructor.resolve(bit);
     return (this.bitfield & bit) === bit;
   }
@@ -53,8 +52,7 @@ class BitField {
    * @returns {string[]}
    */
   missing(bits, ...hasParams) {
-    if (!Array.isArray(bits)) bits = new this.constructor(bits).toArray(false);
-    return bits.filter(p => !this.has(p, ...hasParams));
+    return new this.constructor(bits).remove(this).toArray(...hasParams);
   }
 
   /**
@@ -131,9 +129,10 @@ class BitField {
   /**
    * Data that can be resolved to give a bitfield. This can be:
    * * A bit number (this can be a number literal or a value taken from {@link BitField.FLAGS})
+   * * A string bit number
    * * An instance of BitField
    * * An Array of BitFieldResolvable
-   * @typedef {number|bigint|BitField|BitFieldResolvable[]} BitFieldResolvable
+   * @typedef {number|string|bigint|BitField|BitFieldResolvable[]} BitFieldResolvable
    */
 
   /**
@@ -143,11 +142,13 @@ class BitField {
    */
   static resolve(bit) {
     const { defaultBit } = this;
-    if (typeof bit === 'undefined') return defaultBit;
     if (typeof defaultBit === typeof bit && bit >= defaultBit) return bit;
     if (bit instanceof BitField) return bit.bitfield;
     if (Array.isArray(bit)) return bit.map(p => this.resolve(p)).reduce((prev, p) => prev | p, defaultBit);
-    if (typeof bit === 'string' && typeof this.FLAGS[bit] !== 'undefined') return this.FLAGS[bit];
+    if (typeof bit === 'string') {
+      if (typeof this.FLAGS[bit] !== 'undefined') return this.FLAGS[bit];
+      if (!isNaN(bit)) return typeof defaultBit === 'bigint' ? BigInt(bit) : Number(bit);
+    }
     throw new RangeError('BITFIELD_INVALID', bit);
   }
 }

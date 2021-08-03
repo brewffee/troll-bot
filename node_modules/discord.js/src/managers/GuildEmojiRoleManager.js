@@ -1,13 +1,18 @@
 'use strict';
 
+const { Collection } = require('@discordjs/collection');
+const DataManager = require('./DataManager');
 const { TypeError } = require('../errors');
-const Collection = require('../util/Collection');
+const Role = require('../structures/Role');
 
 /**
  * Manages API methods for roles belonging to emojis and stores their cache.
+ * @extends {DataManager}
  */
-class GuildEmojiRoleManager {
+class GuildEmojiRoleManager extends DataManager {
   constructor(emoji) {
+    super(emoji.client, Role);
+
     /**
      * The emoji belonging to this manager
      * @type {GuildEmoji}
@@ -18,22 +23,6 @@ class GuildEmojiRoleManager {
      * @type {Guild}
      */
     this.guild = emoji.guild;
-    /**
-     * The client belonging to this manager
-     * @type {Client}
-     * @readonly
-     */
-    Object.defineProperty(this, 'client', { value: emoji.client });
-  }
-
-  /**
-   * The filtered collection of roles of the guild emoji
-   * @type {Collection<Snowflake, Role>}
-   * @private
-   * @readonly
-   */
-  get _roles() {
-    return this.guild.roles.cache.filter(role => this.emoji._roles.includes(role.id));
   }
 
   /**
@@ -42,7 +31,7 @@ class GuildEmojiRoleManager {
    * @readonly
    */
   get cache() {
-    return this._roles;
+    return this.guild.roles.cache.filter(role => this.emoji._roles.includes(role.id));
   }
 
   /**
@@ -55,14 +44,14 @@ class GuildEmojiRoleManager {
 
     const resolvedRoles = [];
     for (const role of roleOrRoles.values()) {
-      const resolvedRole = this.guild.roles.resolveID(role);
+      const resolvedRole = this.guild.roles.resolveId(role);
       if (!resolvedRole) {
         return Promise.reject(new TypeError('INVALID_ELEMENT', 'Array or Collection', 'roles', role));
       }
       resolvedRoles.push(resolvedRole);
     }
 
-    const newRoles = [...new Set(resolvedRoles.concat(...this._roles.values()))];
+    const newRoles = [...new Set(resolvedRoles.concat(...this.cache.values()))];
     return this.set(newRoles);
   }
 
@@ -74,22 +63,22 @@ class GuildEmojiRoleManager {
   remove(roleOrRoles) {
     if (!Array.isArray(roleOrRoles) && !(roleOrRoles instanceof Collection)) roleOrRoles = [roleOrRoles];
 
-    const resolvedRoles = [];
+    const resolvedRoleIds = [];
     for (const role of roleOrRoles.values()) {
-      const resolvedRole = this.guild.roles.resolveID(role);
-      if (!resolvedRole) {
+      const roleId = this.guild.roles.resolveId(role);
+      if (!roleId) {
         return Promise.reject(new TypeError('INVALID_ELEMENT', 'Array or Collection', 'roles', role));
       }
-      resolvedRoles.push(resolvedRole);
+      resolvedRoleIds.push(roleId);
     }
 
-    const newRoles = this._roles.keyArray().filter(role => !resolvedRoles.includes(role.id));
+    const newRoles = [...this.cache.keys()].filter(id => !resolvedRoleIds.includes(id));
     return this.set(newRoles);
   }
 
   /**
    * Sets the role(s) that can use this emoji.
-   * @param {Collection<Snowflake, Role>|RoleResolvable[]} roles The roles or role IDs to apply
+   * @param {Collection<Snowflake, Role>|RoleResolvable[]} roles The roles or role ids to apply
    * @returns {Promise<GuildEmoji>}
    * @example
    * // Set the emoji's roles to a single role
@@ -108,7 +97,7 @@ class GuildEmojiRoleManager {
 
   clone() {
     const clone = new this.constructor(this.emoji);
-    clone._patch(this._roles.keyArray().slice());
+    clone._patch([...this.cache.keys()]);
     return clone;
   }
 
