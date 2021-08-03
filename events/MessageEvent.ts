@@ -34,11 +34,13 @@ export const MessageEvent = new TrollEvent(client, {
       isCommand: Boolean(command),
       flags: flags,
     });
+    console.log(command);
 
     if (!command) return;
 
     const resolved = await Promise.all(resolveArguments(args, command, message));
-    command.run(message, resolved, flags);
+    //console.log(command.isAuthorized(message));
+    command.isAuthorized(message) ? command.run(message, resolved, flags) : console.log(''); // ADD UNATHORIZED ERROR LATER!!
   },
 });
 
