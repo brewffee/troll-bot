@@ -5,12 +5,18 @@ import { TrollEvent } from '../TrollEvent';
 
 export const MessageEvent = new TrollEvent(client, {
   name: 'MessageEvent',
-  description: 'emj',
-  type: 'message',
+  description: 'Emitted when there\'s a message, duh.',
+  type: 'messageCreate',
   run: async (client: TrollClient, message: Message) => {
     if (message.author.bot) return;
-    const data = message.content.split(/ +/g);
-    if (!data[0].endsWith(client.config.suffix)) return console.log('does not! emit response');
+    // REACTIONS
+    Math.floor(Math.random() * 10) === 1
+      ? message.react(client.config.reddit[Math.floor(Math.random() * 4)])
+      : null
+    // COMMANDS/RESPONDER
+    if (!message.content.endsWith(client.config.suffix)) 
+    return client.emit('responder', message);
+    const data = message.content.replace(client.config.suffix, '').split(/ +/g);
     const [args, flags] = data.slice(1).reduce(
       ([args, flags], argument) => {
         const match = /^(--?)([\w\d]+)(?:=(.+))?$/.exec(argument);
@@ -20,7 +26,7 @@ export const MessageEvent = new TrollEvent(client, {
       },
       [new Array(), new Map()]
     );
-    const commandName = data[0].replace(client.config.suffix, '').toLowerCase();
+    const commandName = data[0].toLowerCase();
     const command = client.commands.get(commandName) ?? client.commands.find(({ info: { aliases } }) => !!aliases?.includes(commandName));
     console.log({
       args: args,
@@ -40,40 +46,41 @@ const resolveArguments = (args: string[], command: TrollCommand, message: Messag
   return args.map(async (argument: string, index) => {
     const argumentType = command.info.arguments![index]?.type;
     if (!argumentType) return null;
-
-    if (argumentType === 'STRING') return argument;
-
-    if (argumentType === 'NUMBER') return parseInt(argument) || null;
-
-    if (argumentType === 'CHANNEL') {
-      const mention = argument.match(/^<#(\d+)>$/)?.[1] as string;
-      const id = argument.match(/\d{17,19}/)?.[0] as string;
-      return message.guild?.channels.cache.get(mention ?? id) ?? message.guild?.channels.cache.find(({ name }) => name.toLowerCase() === argument.toLowerCase()) ?? null;
-    }
-
-    if (argumentType === 'ROLE') {
-      const mention = argument.match(/^<@&(\d+)>$/)?.[1] as string;
-      const id = argument.match(/\d{17,19}/)?.[0] as string;
-      return message.guild?.roles.cache.get(mention ?? id) ?? message.guild?.channels.cache.find(({ name }) => name.toLowerCase() === argument.toLowerCase()) ?? null;
-    }
-
-    if (argumentType === 'MEMBER' || argumentType === 'USER') {
-      const mention = argument.match(/^<@!?(\d+)>$/)?.[1] as string;
-      const id = argument.match(/\d{17,19}/)?.[0] as string;
-      const getMember = () =>
-        message.guild?.members
-          .fetch(mention ?? id)
-          .then((member) => (argumentType === 'USER' ? member.user : member))
-          .catch(() =>
-            !mention && !id
-              ? message.guild?.members
-                  .fetch({ query: argument })
-                  .then((members) => (argumentType === 'USER' ? members.first()?.user : members.first()))
-                  .catch(() => null)
-              : null
-          );
-
-      return argumentType === 'USER' ? message.client.users.fetch(mention ?? id).catch(getMember) : getMember();
+    switch (argumentType) {
+      case 'STRING': {
+        return argument;
+      }
+      case 'NUMBER': {
+       return parseInt(argument) || null;  
+      }
+      case 'CHANNEL': {
+        const mention = argument.match(/^<#(\d{17,18})>$/)?.[1] as string;
+        const id = argument.match(/\d{17,18}/)?.[0] as string;
+        return message.guild?.channels.cache.get(mention ?? id) ?? message.guild?.channels.cache.find(({ name }) => name.toLowerCase() === argument.toLowerCase()) ?? null;
+      }
+      case 'ROLE': {
+        const mention = argument.match(/^<@&(\d{17,18})>$/)?.[1] as string;
+        const id = argument.match(/\d{17,18}/)?.[0] as string;
+        return message.guild?.roles.cache.get(mention ?? id) ?? message.guild?.channels.cache.find(({ name }) => name.toLowerCase() === argument.toLowerCase()) ?? null;
+      } 
+      case 'MEMBER':
+      case 'USER': {
+        const mention = argument.match(/^<@!?(\d{17,18})>$/)?.[1] as string;
+        const id = argument.match(/\d{17,18}/)?.[0] as string;
+        const getMember = () => 
+          message.guild?.members
+            .fetch(mention ?? id)
+            .then((member) => (argumentType === 'USER' ? member.user : member))
+            .catch(() =>
+              !mention && !id
+                ? message.guild?.members
+                    .fetch({ query: argument })
+                    .then((members) => (argumentType === 'USER' ? members.first()?.user : members.first()))
+                    .catch(() => null)
+                : null
+            );  
+        return argumentType === 'USER' ? message.client.users.fetch(mention ?? id).catch(getMember) : getMember();
+      }
     }
   });
 };

@@ -6,13 +6,13 @@
   "scripts": {
     "start": "tsc && node -r dotenv/config out/TrollClient.js",
     "clear": "rm -rf out/*",
-    "push": "git add . && git commit -m \"bigsex\" && git push"
+    "push": "git add . && git commit -m \"lol rewritin shit\" && git push"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "github:discordjs/discord.js",
+    "discord.js": "^13.0.0-dev.t1627906063.6e0ea02",
     "dotenv": "^9.0.2"
   },
   "devDependencies": {

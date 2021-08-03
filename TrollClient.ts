@@ -1,10 +1,13 @@
-import { Client, Collection, Intents } from 'discord.js';
+import { BufferResolvable, ChannelResolvable, Client, Collection } from 'discord.js';
 import { readdir } from 'fs';
 import { TrollCommand } from './TrollCommand';
 import { TrollEvent } from './TrollEvent';
 
 interface TrollConfig {
   suffix: string;
+  reddit: string[];
+  iconChannel: ChannelResolvable;
+  responses: Array<[RegExp, string, BufferResolvable | null]>;
 }
 
 export class TrollClient extends Client {
@@ -12,7 +15,7 @@ export class TrollClient extends Client {
   public load: Function;
   public config!: TrollConfig;
   constructor() {
-    super({ intents: Intents.ALL });
+    super({ intents: 3655 });
     this.load = (config: TrollConfig) => {
       this.config = config;
       readdir(`./out/commands`, (err, files) => {
@@ -34,4 +37,20 @@ export class TrollClient extends Client {
   }
 }
 export const client = new TrollClient();
-client.load({ suffix: '<:troll:841760436042203138>' });
+client.load({ 
+  suffix: '<:troll:841760436042203138>',
+  reddit: [  
+    '<:rsilver:843164309735735316>',
+    '<:rgold:843160855234215968>',
+    '<:rplat:843164215786340442>',
+    '<:wholesome:843164215346069546>'
+  ],
+  iconChannel: '841159137781874698',
+  responses: [
+    [/y((o+u'?r+e?)|(o+|e|a))( are)? m((o+ther+)|(o+|u)m)(m+y+)?/gi, 'i am doing your mother', 'https://pbs.twimg.com/media/E0qYJZLWYAE6_7C.png'],
+    [/bu+s{2,}y+/gi, 'hnng <:cum:841142405846925312>', null],
+    [/to+p+/gi, '*bottom', null],
+    [/🥺|https:\/\/discord\.com\/assets\/6bca769662f755d33514d1f5304c617d\.svg/gi, 'what the fuck is "🥺" i dont speak bottom', null],
+    [/(amo+n?g+)|sus+|impost|vent|pretender|cre+wma+te|medbay|electrical/gi, 'SUSSY!', 'https://geixcowo.ga/amogsus.png']
+  ]
+});

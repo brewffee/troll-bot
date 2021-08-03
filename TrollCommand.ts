@@ -1,4 +1,4 @@
-import { DiscordAPIError, GuildChannel, GuildMember, Message, PermissionResolvable, Role, User } from 'discord.js';
+import { DiscordAPIError, GuildChannel, GuildMember, Message, PermissionResolvable, Role, ThreadChannel, User } from 'discord.js';
 import { TrollClient } from './TrollClient';
 
 interface CommandOptions {
@@ -36,11 +36,11 @@ export class TrollCommand {
       if (!this.info.accessibility) {
         authorized = true;
       } else if (this.info.accessibility.owner) {
-        authorized = member!.id === guild!.ownerID;
+        authorized = member!.id === guild!.ownerId;
       } else if (this.info.accessibility.admins) {
-        authorized = member!.roles.cache.some((r) => r.id === '842802299675213824') || member!.id === guild!.ownerID;
+        authorized = member!.roles.cache.some((r) => r.id === '842802299675213824') || member!.id === guild!.ownerId;
       } else if (this.info.accessibility.admins) {
-        authorized = member!.roles.cache.some((r) => ['842802299675213824', '842802567499219005'].includes(r.id)) || member!.id === guild!.ownerID;
+        authorized = member!.roles.cache.some((r) => ['842802299675213824', '842802567499219005'].includes(r.id)) || member!.id === guild!.ownerId;
       }
 
       if (authorized || this.info.permissions) {
@@ -66,4 +66,4 @@ export interface Argument {
 
 export interface Flag {}
 
-export type ArgumentType = string | number | null | undefined | GuildMember | User | GuildChannel | Role;
+export type ArgumentType = string | number | null | undefined | GuildMember | User | GuildChannel | ThreadChannel | Role;
