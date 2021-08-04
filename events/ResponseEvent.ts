@@ -9,7 +9,6 @@ export const ResponseEvent = new TrollEvent(client, {
   run: async (client: TrollClient, message: Message) => {
     if (message.channel.id === '869775828924375060') return;
     if (message.channel.id === client.config.iconChannel) {
-      console.log(message.channel);
       return client.emit('guildIconShit', message);
     }
     client.config.responses.forEach((i) => {

@@ -39,11 +39,11 @@ export class TrollCommand {
         authorized = member!.id === guild!.ownerId;
       } else if (this.info.accessibility.admins) {
         authorized = member!.roles.cache.some((r) => r.id === '842802299675213824') || member!.id === guild!.ownerId;
-      } else if (this.info.accessibility.admins) {
+      } else if (this.info.accessibility.mods) {
         authorized = member!.roles.cache.some((r) => ['842802299675213824', '842802567499219005'].includes(r.id)) || member!.id === guild!.ownerId;
       }
 
-      if (authorized || this.info.permissions) {
+      if (authorized && this.info.permissions) {
         authorized = member!.permissions.has(this.info.permissions!.user!, true);
       }
 
