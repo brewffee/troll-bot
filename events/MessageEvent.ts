@@ -28,18 +28,17 @@ export const MessageEvent = new TrollEvent(client, {
     );
     const commandName = data[0].toLowerCase();
     const command = client.commands.get(commandName) ?? client.commands.find(({ info: { aliases } }) => !!aliases?.includes(commandName));
-    console.log({
+    /*console.log({
       args: args,
       commandName: commandName,
       isCommand: Boolean(command),
       flags: flags,
-    });
+    });*/
 
     if (!command) return;
 
     const resolved = await Promise.all(resolveArguments(args, command, message));
-    //console.log(command.isAuthorized(message));
-    console.log(command.isAuthorized(message) ? command.run(message, resolved, flags) : 'no'); // ADD UNATHORIZED ERROR LATER!!
+    command.isAuthorized(message) ? command.run(message, resolved, flags) : message.channel.send('you cant do that buddy'); 
   },
 });
 
