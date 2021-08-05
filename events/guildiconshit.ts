@@ -9,7 +9,6 @@ export const guildIconShit = new TrollEvent(client, {
   type: 'guildIconShit',
   run: async (_client: TrollClient, message: Message) => {
     const url = message.attachments?.first()?.url || message.content;
-    console.log(message.channel);
     if (/(https?:\/\/.+\.(jpe?g|png|webp|gif)(\?.+)?)/i.test(url)) {
       return Math.floor(Math.random() * 2) === 1
         ? message.channel.send('changed the guild icon').then(() => message.guild!.setIcon(url))
