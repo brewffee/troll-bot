@@ -15,7 +15,7 @@ export const TestCommand = new TrollCommand(client, {
     } catch (error) {
       return { code: 'ERROR', error: error };
     } finally {
-      return { code: 'INFO', details: `${message.member} ran command "${(this as any).info.name }"` };
+      return { code: 'INFO', details: `${message.member} ran command "${(this as any).info.name}"` };
     }
   }
 });

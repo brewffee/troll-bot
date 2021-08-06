@@ -6,7 +6,7 @@
   "scripts": {
     "start": "tsc && node -r dotenv/config out/TrollClient.js",
     "clear": "rm -rf out/*",
-    "push": "git add . && git commit -m \"lol rewritin shit\" && git push"
+    "push": "git add . && git commit -m \"making more use of Result and adding flag shit lol\" && git push"
   },
   "keywords": [],
   "author": "",
