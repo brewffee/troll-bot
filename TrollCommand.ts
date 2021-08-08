@@ -5,8 +5,7 @@ interface CommandOptions {
   name: string;
   description: string;
   aliases?: string[];
-  argCount?: [number, string];
-  usage: string;
+  usage?: string;
   nsfw?: boolean;
   permissions?: {
     client?: PermissionResolvable[];
@@ -30,6 +29,9 @@ export class TrollCommand {
     Object.defineProperty(this, 'client', { value: client, enumerable: false });
     this.info = info;
     this.info.arguments = info.arguments?.map((argument) => ({ required: true, ...argument })) ?? [];
+    this.info.usage = this.info.name;
+    this.info.arguments?.forEach(a => this.info.usage += ` <${a.name}>`);
+    this.info.usage += ':troll:';
     this.run = info.run;
     this.isAuthorized = ({ member, guild }: Message): boolean => {
       let authorized: boolean = false;

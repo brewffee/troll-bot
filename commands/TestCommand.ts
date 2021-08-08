@@ -5,7 +5,6 @@ export const TestCommand = new TrollCommand(client, {
   name: 'test',
   aliases: ['alias'],
   description: 'lists troll data',
-  usage: 'test:troll:',
   accessibility: {
     owner: true,
   },

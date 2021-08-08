@@ -51,6 +51,6 @@ client.load({
     [/\bbu+s{2,}y+/gi, 'hnng <:cum:841142405846925312>', null],
     [/\bto+p+/gi, '*bottom', null],
     [/🥺|https:\/\/discord\.com\/assets\/6bca769662f755d33514d1f5304c617d\.svg/gi, 'what the fuck is "🥺" i dont speak bottom', null],
-    [/\b((amo+n?g+)|sus+|impost|vent|pretender|cre+wma+te|medbay|electrical)/gi, 'SUSSY!', 'https://geixcowo.ga/amogsus.png']
+    [/\b((amo+n?g+)|s+u+(s+|ß+)|impost|vent|pretender|cre+wma+te|medbay|electrical)/gi, 'SUSSY!', 'https://geixcowo.ga/amogsus.png']
   ]
 });
