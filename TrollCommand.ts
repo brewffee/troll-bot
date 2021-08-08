@@ -30,7 +30,7 @@ export class TrollCommand {
     this.info = info;
     this.info.arguments = info.arguments?.map((argument) => ({ required: true, ...argument })) ?? [];
     this.info.usage = this.info.name;
-    this.info.arguments?.forEach(a => this.info.usage += ` <${a.name}>`);
+    this.info.arguments?.forEach(a =>  this.info.usage += a.required ? ` <${a.name}>` : ` [${a.name}]`);
     this.info.usage += ':troll:';
     this.run = info.run;
     this.isAuthorized = ({ member, guild }: Message): boolean => {
