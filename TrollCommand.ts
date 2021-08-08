@@ -62,8 +62,8 @@ export interface Result {
 
 export interface Argument {
   name: string;
-  required?: boolean;
   type: 'STRING' | 'NUMBER' | 'MEMBER' | 'USER' | 'CHANNEL' | 'ROLE';
+  required?: boolean;
 }
 
 export interface Flag {}
