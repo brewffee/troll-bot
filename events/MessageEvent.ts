@@ -1,6 +1,6 @@
 import { Message } from 'discord.js';
 import { client, TrollClient } from '../TrollClient';
-import { ArgumentType, Result, TrollCommand } from '../TrollCommand';
+import { ArgumentType, TrollCommand } from '../TrollCommand';
 import { TrollEvent } from '../TrollEvent';
 
 export const MessageEvent = new TrollEvent(client, {
