@@ -1,4 +1,4 @@
-import { BufferResolvable, ChannelResolvable, Client, Collection } from 'discord.js';
+import { BufferResolvable, ChannelResolvable, Client, Collection, MessageAttachment } from 'discord.js';
 import { readdir } from 'fs';
 import { TrollCommand } from './TrollCommand';
 import { TrollEvent } from './TrollEvent';
@@ -47,10 +47,10 @@ client.load({
   ],
   iconChannel: '841159137781874698',
   responses: [
-    [/\b(y((o+u'?r+e?)|(o+|e|a))( are)? m((o+ther+)|(o+|u)m)(m+y+)?)/gi, 'i am doing your mother', 'https://pbs.twimg.com/media/E0qYJZLWYAE6_7C.png'],
+    [/\b(y((o+u'?r+e?)|(o+|e|a))( are)? m((o+ther+)|(o+|u)m)(m+y+)?)/gi, 'i am doing your mother', './images/mother.png'],
     [/\bbu+s{2,}y+/gi, 'hnng <:cum:841142405846925312>', null],
     [/\bto+p+/gi, '*bottom', null],
     [/🥺|https:\/\/discord\.com\/assets\/6bca769662f755d33514d1f5304c617d\.svg/gi, 'what the fuck is "🥺" i dont speak bottom', null],
-    [/\b((amo+n?g+)|s+u+(s+|ß+)|impost|vent|pretender|cre+wma+te|medbay|electrical)/gi, 'SUSSY!', 'https://geixcowo.ga/amogsus.png']
+    [/\b((amo+n?g+)|s+u+(s+|ß+)|impost|vent|pretender|cre+wma+te|medbay|electrical)/gi, 'SUSSY!', './images/amogsus.png']
   ]
 });
