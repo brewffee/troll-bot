@@ -9,13 +9,16 @@ export const MessageEvent = new TrollEvent(client, {
   type: 'messageCreate',
   run: async (client: TrollClient, message: Message) => {
     if (message.author.bot || !message.member) return;
+    // GUILD ICON/RESPONDER
+    if (message.channel.id === client.config.iconChannel) {
+      return client.emit('guildIconShit', message);
+    } else if (!message.content.endsWith(client.config.suffix))
+      return client.emit('responder', message);
     // REACTIONS
     Math.floor(Math.random() * 10) === 1
       ? message.react(client.config.reddit[Math.floor(Math.random() * 4)])
       : null
-    // COMMANDS/RESPONDER
-    if (!message.content.endsWith(client.config.suffix))
-      return client.emit('responder', message);
+    // COMMANDS
     const data = message.content.replace(client.config.suffix, '').trim().split(/ +/g);
     const [args, flags] = data.slice(1).reduce(
       ([args, flags], argument) => {

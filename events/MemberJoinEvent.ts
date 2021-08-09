@@ -8,6 +8,6 @@ export const MemberJoinEvent = new TrollEvent(client, {
   description: 'adds roles (for bots only)',
   type: 'guildMemberAdd',
   run: async (_client: TrollClient, member: GuildMember) => {
-    if (member.user.bot) return member.roles.add('841267799787438090');
+    if (member.user.bot) return member.roles.add(client.config.botRole);
   },
 });

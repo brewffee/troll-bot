@@ -18,6 +18,7 @@ interface CommandOptions {
     mods?: boolean;
   };
   arguments?: Argument[];
+
   run: (message: Message, args: any, flags: Map<string, string>) => Promise<Result | undefined>;
 }
 
@@ -40,9 +41,9 @@ export class TrollCommand {
       } else if (this.info.accessibility.owner) {
         authorized = member!.id === guild!.ownerId;
       } else if (this.info.accessibility.admins) {
-        authorized = member!.roles.cache.some((r) => r.id === '842802299675213824') || member!.id === guild!.ownerId;
+        authorized = member!.roles.cache.some((r) => r.id === client.config.adminRole) || member!.id === guild!.ownerId;
       } else if (this.info.accessibility.mods) {
-        authorized = member!.roles.cache.some((r) => ['842802299675213824', '842802567499219005'].includes(r.id)) || member!.id === guild!.ownerId;
+        authorized = member!.roles.cache.some((r) => [client.config.adminRole, client.config.modRole].includes(r.id)) || member!.id === guild!.ownerId;
       }
 
       if (authorized && this.info.permissions) {
