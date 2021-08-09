@@ -39,7 +39,7 @@ export const MessageEvent = new TrollEvent(client, {
     // define a variable from the command's return value and create a logger later :)
     // finally making SOME use of Result type LOL
     const resolved = await Promise.all(resolveArguments(args, command, message));
-    command.isAuthorized(message) ? console.log(await command.run(message, resolved, flags)) : message.channel.send('you cant do that buddy'); 
+    command.isAuthorized(message) ? console.log(await command.run(message, resolved, flags)) : message.channel.send('you cant do that buddy');
   },
 });
 

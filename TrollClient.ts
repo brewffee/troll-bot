@@ -1,4 +1,4 @@
-import { BufferResolvable, ChannelResolvable, Client, Collection, MessageAttachment } from 'discord.js';
+import { BufferResolvable, ChannelResolvable, Client, Collection } from 'discord.js';
 import { readdir } from 'fs';
 import { TrollCommand } from './TrollCommand';
 import { TrollEvent } from './TrollEvent';
@@ -21,25 +21,27 @@ export class TrollClient extends Client {
       readdir(`./out/commands`, (err, files) => {
         if (err) throw err;
         files.filter((f) => f.endsWith('.js')).forEach((file) => {
-            const command = Object.values(require(`./commands/${file}`))[0] as TrollCommand;
-            this.commands.set(command.info.name, command);
-          });
+          const command = Object.values(require(`./commands/${file}`))[0] as TrollCommand;
+          this.commands.set(command.info.name, command);
+        });
       });
       readdir('./out/events', (err, files) => {
         if (err) throw err;
         files.filter((f) => f.endsWith('.js')).forEach((file) => {
-            const event = Object.values(require(`./events/${file}`))[0] as TrollEvent;
-            this.on(event.info.type, event.info.run.bind(null, this));
-          });
+          const event = Object.values(require(`./events/${file}`))[0] as TrollEvent;
+          this.on(event.info.type, event.info.run.bind(null, this));
+        });
       });
       this.login();
     };
   }
 }
+
 export const client = new TrollClient();
-client.load({ 
+
+client.load({
   suffix: '<:troll:841760436042203138>',
-  reddit: [  
+  reddit: [
     '<:rsilver:843164309735735316>',
     '<:rgold:843160855234215968>',
     '<:rplat:843164215786340442>',
@@ -48,9 +50,9 @@ client.load({
   iconChannel: '841159137781874698',
   responses: [
     [/\b(y((o+u'?r+e?)|(o+|e|a))( are)? m((o+ther+)|(o+|u)m)(m+y+)?)/gi, 'i am doing your mother', './images/mother.png'],
-    [/\bbu+s{2,}y+/gi, 'hnng <:cum:841142405846925312>', null],
-    [/\bto+p+/gi, '*bottom', null],
-    [/🥺|https:\/\/discord\.com\/assets\/6bca769662f755d33514d1f5304c617d\.svg/gi, 'what the fuck is "🥺" i dont speak bottom', null],
+    [/\bbu+s{2,}y+/gi, 'hnng <:cum:841142405846925312>'],
+    [/\bto+p+/gi, '*bottom'],
+    [/🥺|https:\/\/discord\.com\/assets\/6bca769662f755d33514d1f5304c617d\.svg/gi, 'what the fuck is "🥺" i dont speak bottom'],
     [/\b((amo+n?g+)|s+u+(s+|ß+)|impost|vent|pretender|cre+wma+te|medbay|electrical)/gi, 'SUSSY!', './images/amogsus.png']
   ]
 });

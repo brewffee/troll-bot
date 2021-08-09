@@ -1,4 +1,4 @@
-import { client, TrollClient } from '../TrollClient';
+import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 
 export const HelpCommand = new TrollCommand(client, {
@@ -11,7 +11,7 @@ export const HelpCommand = new TrollCommand(client, {
       client.commands.forEach(c => {
         const { name, description, usage, accessibility } = c.info;
         if (accessibility?.owner) return;
-        list += `**${name}** [\`${usage}\`] - ${description}\n`;      
+        list += `**${name}** [\`${usage}\`] - ${description}\n`;
       });
       message.channel.send(list);
     } catch (error) {
