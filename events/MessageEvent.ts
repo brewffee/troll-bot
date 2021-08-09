@@ -9,15 +9,18 @@ export const MessageEvent = new TrollEvent(client, {
   type: 'messageCreate',
   run: async (client: TrollClient, message: Message) => {
     if (message.author.bot || !message.member) return;
+    // REACTIONS
+    if (/((day of )?bi+r+((th?)|f))|(bi+r+(th?)|f(-| )?da+y)|(ca+ke+ ?da+y)|b(-| )?da+y/gi.test(message.content)) {
+      message.react(client.config.cake);
+    }
+    Math.floor(Math.random() * 10) === 1
+      ? message.react(client.config.reddit[Math.floor(Math.random() * 4)])
+      : null
     // GUILD ICON/RESPONDER
     if (message.channel.id === client.config.iconChannel) {
       return client.emit('guildIconShit', message);
     } else if (!message.content.endsWith(client.config.suffix))
       return client.emit('responder', message);
-    // REACTIONS
-    Math.floor(Math.random() * 10) === 1
-      ? message.react(client.config.reddit[Math.floor(Math.random() * 4)])
-      : null
     // COMMANDS
     const data = message.content.replace(client.config.suffix, '').trim().split(/ +/g);
     const [args, flags] = data.slice(1).reduce(

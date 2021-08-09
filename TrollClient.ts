@@ -1,19 +1,20 @@
-import { BufferResolvable, ChannelResolvable, Client, Collection, Snowflake } from 'discord.js';
+import { BufferResolvable, ChannelResolvable, Client, Collection, EmojiResolvable, RoleResolvable, Snowflake } from 'discord.js';
 import { readdir } from 'fs';
 import { TrollCommand } from './TrollCommand';
 import { TrollEvent } from './TrollEvent';
 
 interface TrollConfig {
-  troll: string;
+  troll: EmojiResolvable;
   suffix: string;
-  reddit: string[]; // enable feature disabling later :P
+  cake: EmojiResolvable;
+  reddit: EmojiResolvable[]; // enable feature disabling later :P
   iconChannel: ChannelResolvable;
   general: Snowflake;
   responses: Array<[RegExp, string, BufferResolvable | null]>;
-  botRole: Snowflake;
-  memberRole: Snowflake;
-  adminRole: Snowflake;
-  modRole: Snowflake;
+  botRole: RoleResolvable;
+  memberRole: RoleResolvable;
+  adminRole: RoleResolvable;
+  modRole: RoleResolvable;
 }
 
 export class TrollClient extends Client {
@@ -48,6 +49,7 @@ export const client = new TrollClient();
 client.load({ // create a separate config.js for this later
   troll: '<:troll:841760436042203138>',
   suffix: '<:troll:841760436042203138>',
+  cake: '<:cakeday:874408986936492082>',
   reddit: [
     '<:rsilver:843164309735735316>',
     '<:rgold:843160855234215968>',
@@ -57,6 +59,7 @@ client.load({ // create a separate config.js for this later
   iconChannel: '841159137781874698',
   general: '840829257004875789',
   responses: [
+    // if anyone wants to rewrite these regexes PLEASE PR holy shit they're bad
     [/\b(y((o+u'?r+e?)|(o+|e|a))( are)? m((o+ther+)|(o+|u)m)(m+y+)?)/gi, 'i am doing your mother', './images/mother.png'],
     [/\bbu+s{2,}y+/gi, 'hnng <:cum:841142405846925312>'],
     [/\bto+p+/gi, '*bottom'],
