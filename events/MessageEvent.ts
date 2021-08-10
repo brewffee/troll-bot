@@ -10,7 +10,7 @@ export const MessageEvent = new TrollEvent(client, {
   run: async (client: TrollClient, message: Message) => {
     if (message.author.bot || !message.member) return;
     // REACTIONS
-    if (/(((da+y) of )?(bi+r+(th?|f)))|((bi+r+(th?|f))(-| )?\3)|(ca+ke+\8?\3)|b\8?\3/gi.test(message.content)) {
+    if (/(((da+y) of )?(bi+r+(th?|f)))|((bi+r+(th?|f))(-| )?\3)|(ca+ke+\9?\3)|b(-| )?da+y/gi.test(message.content)) {
       message.react(client.config.cake);
     }
     Math.floor(Math.random() * 10) === 1
