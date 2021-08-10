@@ -74,8 +74,8 @@ const resolveArguments = (args: string[], command: TrollCommand, message: Messag
       case 'USER': {
         const mention = argument.match(/^<@!?(\d{17,18})>$/)?.[1] as string;
         const id = argument.match(/\d{17,18}/)?.[0] as string;
-        const getMember = () =>
-          message.guild?.members
+        const getMember = () => {
+          return message.guild?.members
             .fetch(mention ?? id)
             .then((member) => (argumentType === 'USER' ? member.user : member))
             .catch(() =>
@@ -86,6 +86,7 @@ const resolveArguments = (args: string[], command: TrollCommand, message: Messag
                   .catch(() => null)
                 : null
             );
+        }
         return argumentType === 'USER' ? message.client.users.fetch(mention ?? id).catch(getMember) : getMember();
       }
     }
