@@ -79,7 +79,7 @@ export const getStats = async (me: Snowflake) => {
   return sortedList.map((item, ind) => ({ id: item[0], xp: item[1], place: ind + 1 })).filter(item => item.id == me)[0];
 }
 
-export const getPlaceString = async (place) => {
+export const getPlaceString = (place: number) => {
   let placeString = place.toString();
   const lastDigit = placeString[placeString.length -1];
   if (place >= 4 && place <= 20) placeString += 'th';

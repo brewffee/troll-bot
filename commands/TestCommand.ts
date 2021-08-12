@@ -1,4 +1,4 @@
-import { client, TrollClient } from '../TrollClient';
+import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 
 export const TestCommand = new TrollCommand(client, {
@@ -9,12 +9,6 @@ export const TestCommand = new TrollCommand(client, {
     owner: true,
   },
   async run(message) {
-    try {
-      message.channel.send(Array.from((message.client as TrollClient).commands).toString().replace(/,?\[object Object\]/g, ''));
-    } catch (error) {
-      return { code: 'ERROR', error: error };
-    } finally {
-      return { code: 'INFO', details: `${message.member} ran command "${(this as any).info.name}"` };
-    }
+    throw new Error();
   }
 });
