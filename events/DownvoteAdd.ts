@@ -1,13 +1,13 @@
 import { Message, MessageReaction, User } from 'discord.js';
 import { client, TrollClient } from '../TrollClient';
 import { TrollEvent } from '../TrollEvent';
-import { xp } from '../xp';
+import { xp } from '../models/xp';
 
 export const DownvoteEvent = new TrollEvent(client, {
   name: 'DownvoteEvent',
   description: 'removes xp when downvoted',
   type: 'downvote',
-  run: async (client: TrollClient, reaction: MessageReaction) => {
+  run: async (_client: TrollClient, reaction: MessageReaction) => {
     const message = reaction.message as Message;
     if (message.author.bot) return;
     const xpEntry = await xp.findOne({ id: message.author.id });

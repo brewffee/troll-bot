@@ -1,7 +1,7 @@
 import { Message, MessageReaction, User } from 'discord.js';
 import { client, TrollClient } from '../TrollClient';
 import { TrollEvent } from '../TrollEvent';
-import { xp } from '../xp';
+import { xp } from '../models/xp';
 
 export const ReactionXP = new TrollEvent(client, {
   name: 'ReactionXP',

@@ -1,14 +1,13 @@
 import { Message } from 'discord.js';
 import { client, TrollClient } from '../TrollClient';
-import mongoose from 'mongoose';
 import { TrollEvent } from '../TrollEvent';
-import { xp } from '../xp';
+import { xp } from '../models/xp';
 
 export const MessageXP = new TrollEvent(client, {
   name: 'MessageXP',
   description: 'adds XP based upon user message',
   type: 'messageXP',
-  run: async (client: TrollClient, message: Message) => {
+  run: async (_client: TrollClient, message: Message) => {
     if (message.author.bot) return;
     const xpEntry = await xp.findOne({ id: message.author.id });
 

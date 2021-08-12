@@ -10,6 +10,12 @@ export const TestCommand = new TrollCommand(client, {
     owner: true,
   },
   async run(message: Message) {
-    throw new Error();
+    try {
+      return;
+    } catch (error) {
+      return { code: 'ERROR', error: error };
+    } finally {
+      return { code: 'INFO', details: `${message.member} ran command "${(this as any).info.name}"` };
+    }
   }
 });
