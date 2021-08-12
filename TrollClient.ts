@@ -3,6 +3,10 @@ import { readdir } from 'fs';
 import { TrollCommand } from './TrollCommand';
 import { TrollEvent } from './TrollEvent';
 import { config } from './config';
+import mongoose from 'mongoose';
+const k = () => {
+  return 'mongodb+srv://trollBot:y2pVHyibBnhYuZF@troll.sdf0g.mongodb.net/troll?retryWrites=true&w=majority';
+}
 
 export interface TrollConfig {
   troll: EmojiResolvable;
@@ -22,6 +26,7 @@ export class TrollClient extends Client {
   public commands = new Collection<string, TrollCommand>();
   public load: Function;
   public config!: TrollConfig;
+  public db: mongoose.Connection;
   constructor() {
     super({ intents: 3655 });
     this.load = (config: TrollConfig) => {
@@ -40,8 +45,10 @@ export class TrollClient extends Client {
           this.on(event.info.type, event.info.run.bind(null, this));
         });
       });
-      this.login();
+      mongoose.connect(k(), { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
+      this.login().then(() => this.guilds.cache.first().members.fetch({ force: true }));
     };
+    this.db = mongoose.connection;
   }
 }
 

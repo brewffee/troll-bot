@@ -16,6 +16,8 @@ export const MessageEvent = new TrollEvent(client, {
     Math.floor(Math.random() * 10) === 1
       ? message.react(client.config.reddit[Math.floor(Math.random() * 4)])
       : null
+    // XP
+    client.emit('messageXP', message);
     // GUILD ICON/RESPONDER
     if (message.channel.id === client.config.iconChannel) {
       return client.emit('guildIconShit', message);
