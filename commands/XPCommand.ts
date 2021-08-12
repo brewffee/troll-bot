@@ -4,7 +4,7 @@ import { getStats, xp } from '../xp';
 
 export const TestCommand = new TrollCommand(client, {
   name: 'xp',
-  aliases: ['experience', 'levels'],
+  aliases: ['experience', 'levels', 'karma'],
   description: 'check out how much xp ya got',  
   async run(message) {
     try {
