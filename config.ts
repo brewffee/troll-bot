@@ -18,7 +18,7 @@ export const config: TrollConfig = {
     [/\bbu+s{2,}y+/gi, 'hnng <:cum:841142405846925312>'],
     [/\bto+p+/gi, '*bottom'],
     [/🥺|https:\/\/discord\.com\/assets\/6bca769662f755d33514d1f5304c617d\.svg/gi, 'what the fuck is "🥺" i dont speak bottom'],
-    [/\b((amo+n?g+)|s+u+(s+|ß+)|impost|vent|pretender|cre+wma+te|medbay|electrical)/gi, 'SUSSY!', './images/amogsus.png']
+    [/\b((amo+n?g+)|s+u+s+|impost|vent|pretender|cre+wma+te|medbay|electrical)/gi, 'SUSSY!', './images/amogsus.png']
   ],
   botRole: '841267799787438090',
   memberRole: '841295461486428200',
