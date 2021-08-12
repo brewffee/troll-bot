@@ -78,3 +78,14 @@ export const getStats = async (me: Snowflake) => {
   const sortedList = quickSort(xpshitList.map(shitter => [shitter.id, shitter.xp]), 0, xpshitList.length - 1);
   return sortedList.map((item, ind) => ({ id: item[0], xp: item[1], place: ind + 1 })).filter(item => item.id == me)[0];
 }
+
+export const getPlaceString = async (place) => {
+  let placeString = place.toString();
+  const lastDigit = placeString[placeString.length -1];
+  if (place >= 4 && place <= 20) placeString += 'th';
+  else if (lastDigit == '1') placeString += 'st';
+  else if (lastDigit == '2') placeString += 'nd';
+  else if (lastDigit == '3') placeString += 'rd';
+  else if (Number(lastDigit) >= 4) placeString += 'th';
+  return placeString;
+} 
