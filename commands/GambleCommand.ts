@@ -3,6 +3,7 @@ import { cooldown } from '../models/GamblingCooldown';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 import { xp } from '../models/xp';
+import { debt } from '../models/Debt';
 
 export const TestCommand = new TrollCommand(client, {
   name: 'gamble',
@@ -33,6 +34,10 @@ export const TestCommand = new TrollCommand(client, {
       } else {
         message.channel.send(`oops! there goes your **${args[0]}** karma ${client.config.troll}`)
         await xp.findOneAndUpdate({ id: message.author.id }, { $set: { xp: xpEntry.xp - args[0] } });
+        const existing = await debt.findOne({ id: 1 });
+        // await (new debt({ id: 1, karma: 0 - args[0] })).save()
+        // the above NEEDS to be run on a first start!
+        await debt.findOneAndUpdate({ id: 1 }, { $set: { karma: existing.karma  - args[0] } });
       }       
 
       if (lastGamble)
