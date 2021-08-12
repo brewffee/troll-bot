@@ -8,7 +8,7 @@ export const MessageEvent = new TrollEvent(client, {
   description: 'Emitted when there\'s a message, duh.',
   type: 'messageCreate',
   run: async (client: TrollClient, message: Message) => {
-    if (message.author.bot || !message.member) return;
+    if (message.author.bot || !message.member || message.system) return;
     // REACTIONS
     if (/(((da+y) of )?(bi+r+(th?|f)))|((bi+r+(th?|f))(-| )?)|(ca+ke+\9?)|b(-| )?da+y/gi.test(message.content)) {
       message.react(client.config.cake);
