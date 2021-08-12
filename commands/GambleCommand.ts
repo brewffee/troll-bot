@@ -30,7 +30,7 @@ export const TestCommand = new TrollCommand(client, {
       
       if (Math.floor(Math.random() * 2) === 1) {
         message.channel.send(`gg! you just turned your **${args[0]}** karma into **${args[0] * 2}**!`);
-        await xp.findOneAndUpdate({ id: message.author.id }, { $set: { xp: xpEntry.xp + (args[0] * 2) } });
+        await xp.findOneAndUpdate({ id: message.author.id }, { $set: { xp: xpEntry.xp + args[0] } });
       } else {
         message.channel.send(`oops! there goes your **${args[0]}** karma ${client.config.troll}`)
         await xp.findOneAndUpdate({ id: message.author.id }, { $set: { xp: xpEntry.xp - args[0] } });
