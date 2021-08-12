@@ -1,6 +1,6 @@
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
-import { getLeaderboard, getPlaceString, getStats } from '../xp';
+import { getLeaderboard, getPlaceString, getStats, xp } from '../xp';
 
 export const LeaderboardCommand = new TrollCommand(client, {
   name: 'leaderboard',
@@ -8,6 +8,9 @@ export const LeaderboardCommand = new TrollCommand(client, {
   description: 'see how much better everyone is',
   async run(message) {
     try {
+      // allows for getting xp on first msg
+      await xp.findOne({ id: message.author.id });
+
       const stats = await getStats(message.author.id);
       const lb = await getLeaderboard(client);
       message.channel.send(`${lb}\n\nyou're in **${getPlaceString(stats.place)}** with **${stats.xp}** karma`);
