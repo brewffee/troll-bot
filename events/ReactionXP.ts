@@ -17,7 +17,7 @@ export const ReactionXP = new TrollEvent(client, {
       rplat: 15,
       rgold: 10,
       rsilver: 5,
-      wholesome: 5,
+      wholesome: 3,
     } as Record<string, number>;
 
     if (!isTroll && (Date.now() - xpEntry.earnedAt) / 1000 < 30) return; // console.log('already earned in the last 30s!');
