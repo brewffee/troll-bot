@@ -3,6 +3,7 @@ import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 import { xp } from '../models/xp';
 import { getLeaderboard, getPlaceString, getStats } from '../util/leaderboardUtil';
+import { debt } from '../models/Debt';
 
 export const LeaderboardCommand = new TrollCommand(client, {
   name: 'leaderboard',
@@ -10,14 +11,13 @@ export const LeaderboardCommand = new TrollCommand(client, {
   description: 'see how much better everyone is',
   async run(message: Message) {
     try {
-      console.log('a');
       // allows for getting xp on first msg
       await xp.findOne({ id: message.author.id });
-      console.log('b');
       const stats = await getStats(message.author.id);
+      const trollBal = Math.abs((await debt.findOne({ id: 1 })).karma).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      const trollString = `**0. ${client.user.tag}** with **${trollBal}** karma ${client.config.troll}\n`;
       const lb = await getLeaderboard(client);
-      console.log('c');
-      message.channel.send(`${lb}\n\nyou're in **${getPlaceString(stats.place)}** with **${stats.xp}** karma`);
+      message.channel.send(`${trollString}${lb}\n\nyou're in **${getPlaceString(stats.place)}** with **${stats.xp}** karma`);
     } catch (error) {
       return { code: 'ERROR', error: error };
     } finally {
