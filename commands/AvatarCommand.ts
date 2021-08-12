@@ -4,7 +4,7 @@ import { TrollCommand } from '../TrollCommand';
 
 export const AvatarCommand = new TrollCommand(client, {
   name: 'avatar',
-  aliases: ['pfp'],
+  aliases: ['pfp', 'clown'],
   description: 'show a clown on the screen',
   arguments: [{ name: 'User', type: 'USER', required: false }],
   async run(message: Message, args: [User], flags: Map<string, string>) {
