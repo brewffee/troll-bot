@@ -1,5 +1,5 @@
 import { Snowflake } from 'discord.js';
-import mongoose, { Mongoose } from 'mongoose';
+import mongoose from 'mongoose';
 import { TrollClient } from './TrollClient';
 
 export interface xpformat extends mongoose.Document {
