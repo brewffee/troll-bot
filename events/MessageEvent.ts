@@ -74,22 +74,23 @@ const resolveArguments = (args: string[], command: TrollCommand, message: Messag
       }
       case 'MEMBER':
       case 'USER': {
-        const mention = argument.match(/^<@!?(\d{17,18})>$/)?.[1] as string;
-        const id = argument.match(/\d{17,18}/)?.[0] as string;
-        const getMember = () => {
-          return message.guild?.members
-            .fetch(mention ?? id)
-            .then((member) => (argumentType === 'USER' ? member.user : member))
-            .catch(() =>
-              !mention && !id
-                ? message.guild?.members
-                  .fetch({ query: argument })
-                  .then((members) => (argumentType === 'USER' ? members.first()?.user : members.first()))
-                  .catch(() => null)
-                : null
-            );
-        }
-        return argumentType === 'USER' ? message.client.users.fetch(mention ?? id).catch(getMember) : getMember();
+        const mention = argument.match(/^<@!?(\d{17,18})>$/)?.[1];
+        const id = argument.match(/\d{17,18}/)?.[0];
+        const memberOrUser =
+          mention || id
+            ? argumentType === 'USER'
+              ? message.client.users.fetch((mention ?? id)!)
+              : message.guild.members.fetch((mention ?? id)!)
+            : message.guild.members
+              .fetch({ query: argument, limit: 1 })
+              .then((members) => {
+                const member = members.first();
+                if (!member) return null;
+                if (argumentType === 'USER') return member?.user;
+                return member;
+              })
+              .catch(() => null);
+        return memberOrUser;
       }
     }
   });
