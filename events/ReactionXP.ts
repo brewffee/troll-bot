@@ -1,6 +1,5 @@
 import { Message, MessageReaction, User } from 'discord.js';
 import { client, TrollClient } from '../TrollClient';
-import mongoose from 'mongoose';
 import { TrollEvent } from '../TrollEvent';
 import { xp } from '../xp';
 
