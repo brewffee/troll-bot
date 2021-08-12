@@ -1,10 +1,11 @@
+import { Message } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 
 export const HelpCommand = new TrollCommand(client, {
   name: 'help',
   description: 'see commands and shit',
-  async run(message) {
+  async run(message: Message) {
     try {
       let list = 'howdy, check my shit out\n';
       client.commands.forEach(c => {

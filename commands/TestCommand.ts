@@ -1,3 +1,4 @@
+import { Message } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 
@@ -8,7 +9,7 @@ export const TestCommand = new TrollCommand(client, {
   accessibility: {
     owner: true,
   },
-  async run(message) {
+  async run(message: Message) {
     throw new Error();
   }
 });
