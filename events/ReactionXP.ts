@@ -8,6 +8,7 @@ export const ReactionXP = new TrollEvent(client, {
   description: 'adds xp based upon troll\'s reaction',
   type: 'messageReactionAdd',
   run: async (client: TrollClient, reaction: MessageReaction, user: User) => {
+    if (reaction.emoji.name === 'downvote') return client.emit('downvote', reaction);
     const isTroll = user === client.user;
     if (!isTroll) return;
     const message = reaction.message as Message;
