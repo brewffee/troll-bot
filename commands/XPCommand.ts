@@ -10,8 +10,10 @@ export const TestCommand = new TrollCommand(client, {
   arguments: [{ name: 'User', type: 'USER', required: false }],
   async run(message: Message, args: [User]) {
     try {
-      // allows for getting xp on first msg
-      await xp.findOne({ id: (args[0] || message.author).id });
+      let a = await xp.findOne({ id: (args[0] || message.author).id });
+      if (!a) {
+         message.channel.send(`${!args[0] || args[0] === message.author ? 'you' : 'they'} dont have any xp yet!`);
+      }
 
       const stats = await getStats((args[0] || message.author).id);
       const awards = ['<:rplat:843164215786340442>', '<:rgold:843160855234215968>', '<:rsilver:843164309735735316>'];
