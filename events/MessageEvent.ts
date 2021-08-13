@@ -60,7 +60,7 @@ const resolveArguments = (args: string[], command: TrollCommand, message: Messag
         return argument;
       }
       case 'NUMBER': {
-        return parseInt(argument) || null;
+        return Math.round(Number(argument)) || null;
       }
       case 'CHANNEL': {
         const mention = argument.match(/^<#(\d{17,18})>$/)?.[1] as string;
