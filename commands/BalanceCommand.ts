@@ -11,8 +11,9 @@ export const BalanceCommand = new TrollCommand(client, {
   async run(message: Message, args: [User]) {
     try {
       let curWallet = await wallet.findOne({ id: (args[0] || message.author).id });
-      if (!curWallet) {
+      if (!curWallet || curWallet.balance <= 0) {
         message.channel.send(`${!args[0] || args[0] === message.author ? 'you' : 'they'} broke as fuck!`);
+        return;
       }
 
       message.channel.send(

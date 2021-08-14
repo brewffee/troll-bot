@@ -47,7 +47,7 @@ export const DailyCommand = new TrollCommand(client, {
         return { message, deficit, chosen };
       }
 
-      if (!lastDaily || (Date.now() - lastDaily.collectedAt) >= (1000 * 60 * 60 * 24)) {
+      if (!curWallet || !lastDaily || (Date.now() - lastDaily.collectedAt) >= (1000 * 60 * 60 * 24)) {
         const evt = randomEvent();
         message.channel.send(evt.message);
 
