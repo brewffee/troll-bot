@@ -1,4 +1,6 @@
 import { GuildAuditLogsEntry, GuildMember, TextChannel, User } from 'discord.js';
+import { wallet } from '../models/Wallet';
+import { xp } from '../models/xp';
 import { client, TrollClient } from '../TrollClient';
 import { TrollEvent } from '../TrollEvent';
 
@@ -19,9 +21,18 @@ export const MemberLeaveEvent = new TrollEvent(client, {
             channel.send(`${member.user.username} got blasted lmaooo`);
             break;
         }
-        return;
       } else {
         if (!member.pending) channel.send(`${member.user.username} left what the fuck man :(`);
+      }
+
+      const xpEntry = await xp.findOne({ id: member.user.id });
+      if (xpEntry) {
+        await xp.findOneAndDelete({ id: member.user.id });
+      }
+
+      const curWallet = await wallet.findOne({ id: member.user.id });
+      if (curWallet) {
+        await wallet.findOneAndDelete({ id: member.user.id });
       }
     }, 1000);
   },

@@ -3,7 +3,6 @@ import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 import { xp } from '../models/xp';
 import { getLeaderboard, getPlaceString, getStats } from '../util/leaderboardUtil';
-import { debt } from '../models/Debt';
 
 export const LeaderboardCommand = new TrollCommand(client, {
   name: 'leaderboard',
@@ -14,10 +13,8 @@ export const LeaderboardCommand = new TrollCommand(client, {
       // allows for getting xp on first msg
       await xp.findOne({ id: message.author.id });
       const stats = await getStats(message.author.id);
-      const trollBal = Math.abs((await debt.findOne({ id: 1 })).karma).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      const trollString = `**0. ${client.user.tag}** with **${trollBal}** karma ${client.config.troll}\n`;
-      const lb = await getLeaderboard(client);
-      message.channel.send(`${trollString}${lb}\n\nyou're in **${getPlaceString(stats.place)}** with **${stats.xp}** karma`);
+      const lb = await getLeaderboard(message.guild);
+      message.channel.send(`${lb}\n\nyou're in **${getPlaceString(stats.place)}** with **${stats.xp}** karma`);
     } catch (error) {
       return { code: 'ERROR', error: error };
     } finally {
@@ -27,3 +24,4 @@ export const LeaderboardCommand = new TrollCommand(client, {
 });
 
 
+// Create duplicates for coin system

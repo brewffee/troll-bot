@@ -9,6 +9,7 @@ export interface TrollConfig {
   troll: EmojiResolvable;
   suffix: string;
   cake: EmojiResolvable;
+  coin: EmojiResolvable;
   reddit: EmojiResolvable[]; // enable feature disabling later :P
   iconChannel: ChannelResolvable;
   general: Snowflake;

@@ -1,7 +1,5 @@
 import { Snowflake } from 'discord.js';
 import mongoose from 'mongoose';
-import { TrollClient } from '../TrollClient';
-import { quickSort } from '../util/quickSort';
 
 export interface xpformat extends mongoose.Document {
   id: Snowflake,

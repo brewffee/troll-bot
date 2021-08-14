@@ -4,7 +4,7 @@ import { TrollCommand } from '../TrollCommand';
 import { xp } from '../models/xp';
 import { getStats } from '../util/leaderboardUtil';
 
-export const TestCommand = new TrollCommand(client, {
+export const XPCommand = new TrollCommand(client, {
   name: 'xp',
   aliases: ['experience', 'levels', 'karma'],
   description: 'check out how much xp ya got',
@@ -13,7 +13,7 @@ export const TestCommand = new TrollCommand(client, {
     try {
       let a = await xp.findOne({ id: (args[0] || message.author).id });
       if (!a) {
-         message.channel.send(`${!args[0] || args[0] === message.author ? 'you' : 'they'} dont have any xp yet!`);
+        message.channel.send(`${!args[0] || args[0] === message.author ? 'you' : 'they'} dont have any xp yet!`);
       }
 
       const stats = await getStats((args[0] || message.author).id);
