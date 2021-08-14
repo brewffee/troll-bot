@@ -17,7 +17,7 @@ export const AvatarCommand = new TrollCommand(client, {
       }
       message.channel.send({
         content: 'lol look at this clown',
-        files: [new MessageAttachment((args[0] || message.author).displayAvatarURL({ format: 'png', size: isValid ? Number(val!) as ImageSize : 512 }))],
+        files: [new MessageAttachment((args[0] || message.author).displayAvatarURL({ format: 'png', size: isValid ? Number(val!) as ImageSize : 512, dynamic: true }))],
       });
     } catch (error) {
       return { code: 'ERROR', error: error };
