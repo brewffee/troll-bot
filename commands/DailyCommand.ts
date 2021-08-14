@@ -40,7 +40,7 @@ export const DailyCommand = new TrollCommand(client, {
             break;
           default:
             message = 'heres ya daily **250** coins';
-            deficit = -250;
+            deficit = 0;
             break;
         }
         if (chosen) message += 'heres ya daily **250** coins';
@@ -52,7 +52,7 @@ export const DailyCommand = new TrollCommand(client, {
         message.channel.send(evt.message);
 
         if (curWallet)
-          await wallet.findOneAndUpdate({ id: message.author.id }, { $set: { balance: curWallet.balance - evt.deficit } });
+          await wallet.findOneAndUpdate({ id: message.author.id }, { $set: { balance: curWallet.balance + 250 - evt.deficit } });
         else
           await (new wallet({ id: message.author.id, balance: 250 })).save();
 
