@@ -4,6 +4,7 @@ import { TrollCommand } from '../TrollCommand';
 
 export const HelpCommand = new TrollCommand(client, {
   name: 'help',
+  aliases: ['?'],
   description: 'see commands and shit',
   async run(message: Message) {
     try {
