@@ -22,7 +22,6 @@ export const ReactionXP = new TrollEvent(client, {
 
     if (!isTroll && (Date.now() - xpEntry.earnedAt) / 1000 < 30) return; // console.log('already earned in the last 30s!');
     let increment = reactionValues[reaction.emoji.name!] - 1;
-    console.log('giving reaction xp !' + JSON.stringify({ $set: { xp: (xpEntry.xp ?? 0) + increment } }) + ` xpEntry.xp: ${xpEntry.xp}, increment: ${increment}`);
     await xp.findOneAndUpdate({ id: message.author.id }, { $set: { xp: (xpEntry.xp ?? 0) + increment } })
   },
 });

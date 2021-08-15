@@ -28,19 +28,17 @@ export const TestCommand = new TrollCommand(client, {
       }
 
       if (Math.floor(Math.random() * 2) === 1) {
-        message.channel.send(`gg! you just turned your **${args[0]}** coins into **${args[0] * 2}**!\nyou've now got **${curWallet.balance + args[0]}** coins`);
-        console.log('gamble win! ' + JSON.stringify({ $set: { balance: curWallet.balance + args[0] } }) + ` curWallet.balance: ${curWallet.balance}, args[0]: ${args[0]}`);
+        message.channel.send(`gg! you just turned your **${args[0]}** coins into **${args[0] * 2}**!\nyou've now got **${curWallet.balance + args[0]}** coins`);       
         await wallet.findOneAndUpdate({ id: message.author.id }, { $set: { balance: curWallet.balance + args[0] } });
       } else {
-        message.channel.send(`oops! there goes your **${args[0]}** coins ${client.config.troll}\nyou've now got **${curWallet.balance - args[0]}** coins`)
-        console.log('gamble loss! ' + JSON.stringify({ $set: { balance: curWallet.balance - args[0] } }) + ` curWallet.balance: ${curWallet.balance}, args[0]: ${args[0]}`);
+        message.channel.send(`oops! there goes your **${args[0]}** coins ${client.config.troll}\nyou've now got **${curWallet.balance - args[0]}** coins`);     
         await wallet.findOneAndUpdate({ id: message.author.id }, { $set: { balance: curWallet.balance - args[0] } });
       }
 
       if (lastGamble)
         await cooldown.findOneAndUpdate({ id: message.author.id }, { $set: { time: Date.now() } });
       else
-        await (new cooldown({ id: message.author.id, time: Date.now() })).save()
+        await (new cooldown({ id: message.author.id, time: Date.now() })).save();
     } catch (error) {
       return { code: 'ERROR', error: error };
     } finally {
