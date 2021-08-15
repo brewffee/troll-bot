@@ -18,7 +18,7 @@ export const MemberLeaveEvent = new TrollEvent(client, {
             channel.send(`wont be hearing from ${member.user.username} anymore ${client.config.troll}`);
             break;
           case 'MEMBER_KICK':
-            channel.send(`${member.user.username} got blasted lmaooo`);
+            channel.send(`${member.user.username} got ejected :000`);
             break;
         }
       } else {
