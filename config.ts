@@ -4,7 +4,7 @@ export const config: TrollConfig = {
   troll: '<:troll:841760436042203138>',
   suffix: '<:troll:841760436042203138>',
   cake: '<:cakeday:874408986936492082>',
-  coin: '<:rcoin:876200149192425522>',
+  coin: '<:rcoin:876254633813749780>',
   reddit: [
     '<:rsilver:843164309735735316>',
     '<:rgold:843160855234215968>',
