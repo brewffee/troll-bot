@@ -10,7 +10,7 @@ export const ReactionXP = new TrollEvent(client, {
   run: async (client: TrollClient, reaction: MessageReaction, user: User) => {
     if (['downvote', 'upvote'].includes(reaction.emoji.name)) return client.emit('voteAdd', reaction);
     const isTroll = user === client.user;
-    if (!isTroll) return;
+    if (!isTroll || reaction.emoji.name === 'cakeday') return;
     const message = reaction.message as Message;
     const xpEntry = await xp.findOne({ id: message.author.id });
     const reactionValues = {
