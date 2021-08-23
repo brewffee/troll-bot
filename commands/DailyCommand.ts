@@ -52,9 +52,9 @@ export const DailyCommand = new TrollCommand(client, {
         message.channel.send(evt.message);
 
         if (curWallet)
-          await wallet.findOneAndUpdate({ id: message.author.id }, { $set: { balance: curWallet.balance + 250 - evt.deficit } });
+          await wallet.findOneAndUpdate({ id: message.author.id }, { $set: { balance: (curWallet.balance + 250) - evt.deficit } });
         else
-          await (new wallet({ id: message.author.id, balance: 250 })).save();
+          await (new wallet({ id: message.author.id, balance: 250 - evt.deficit < 250 ? evt.deficit : 250})).save();
 
         if (lastDaily)
           await daily.findOneAndUpdate({ id: message.author.id }, { $set: { collectedAt: Date.now() } });
