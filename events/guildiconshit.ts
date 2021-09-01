@@ -15,7 +15,7 @@ export const guildIconShit = new TrollEvent(client, {
       let size: number = await (await fetch(url, {method: 'HEAD'})).headers.get('content-length') / 1000
       if (size > 10240) return message.channel.send('bro you expect me to upload all of that? send something less than 10mb goddamn');
       else if (size * 1000 < 300) return message.channel.send('i need a microscope to see that shit 😐');
-      return Math.floor(Math.random() * 2) === 1
+      return Math.random() > 0.5
         ? message.channel.send('changed the guild icon').then(() => message.guild!.setIcon(url))
         : message.channel.send('hah! shit luck');
     } else {
