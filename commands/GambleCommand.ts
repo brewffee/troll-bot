@@ -4,7 +4,7 @@ import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 import { wallet } from '../models/Wallet';
 
-export const TestCommand = new TrollCommand(client, {
+export const GambleCommand = new TrollCommand(client, {
   name: 'gamble',
   aliases: ['double'],
   description: 'double or nothing :))))',
