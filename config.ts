@@ -1,8 +1,8 @@
 import { TrollConfig } from "./TrollClient";
 
 export const config: TrollConfig = {
-  troll: '<:troll:841760436042203138>',
-  suffix: '<:troll:841760436042203138>',
+  troll: '<:troll:891744450752163891>',
+  suffix: '<:troll:891744450752163891>',
   cake: '<:cakeday:874408986936492082>',
   coin: '<:rcoin:876254633813749780>',
   reddit: [
