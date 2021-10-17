@@ -4,13 +4,25 @@ import { TrollCommand } from '../TrollCommand';
 
 export const TestCommand = new TrollCommand(client, {
   name: 'test',
-  aliases: ['alias'],
+  aliases: ['e'],
   description: 'lists troll data',
   accessibility: {
     owner: true,
   },
-  async run(message: Message) {
+  async run(message: Message, _1, flags: Map<string, string>) {
     try {
+      const args = message.content.slice(1, message.content.length - (client.config.troll as string).length).trim()
+      .split(/ +/g).filter((a) => !/^--(.*)/.test(a));
+      try {
+
+        console.log(flags)
+        const res = require('util').inspect(
+          await eval(`(async()=>{ ${flags.get('m') ? '' : 'return'} ${args.join(' ')}; })();`),
+          { depth: 0 }).toString().replace(message.client.token, '').replace(/`/g, '`\u200b');
+        message.channel.send((res.toString().length >= 2000) ? `rats, its too long.` : res);
+      } catch (error) {
+        message.channel.send(`oops!\n${error.toString().replace(/`/g, '`\u200b')}`);
+      }
       return;
     } catch (error) {
       return { code: 'ERROR', error: error };

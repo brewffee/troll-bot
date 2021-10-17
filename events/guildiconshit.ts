@@ -1,6 +1,4 @@
-import { exec, execSync } from 'child_process';
 import { Message } from 'discord.js';
-import { statSync } from 'fs';
 import { client, TrollClient } from '../TrollClient';
 import { TrollEvent } from '../TrollEvent';
 const fetch = require('node-fetch');

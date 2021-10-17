@@ -1,4 +1,3 @@
-
 import { GuildMember } from 'discord.js';
 import { client, TrollClient } from '../TrollClient';
 import { TrollEvent } from '../TrollEvent';
