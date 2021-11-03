@@ -21,6 +21,8 @@ export const MessageEvent = new TrollEvent(client, {
     // GUILD ICON/RESPONDER
     if (message.channel.id === client.config.iconChannel) {
       return client.emit('guildIconShit', message);
+    } else if (message.channel.id === client.config.nameChannel) {
+      return client.emit('guildNameShit', message);
     } else if (!message.content.endsWith(client.config.suffix))
       return client.emit('responder', message);
     // COMMANDS
