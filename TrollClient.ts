@@ -11,8 +11,6 @@ export interface TrollConfig {
   cake: EmojiResolvable;
   coin: EmojiResolvable;
   reddit: EmojiResolvable[]; // enable feature disabling later :P
-  iconChannel: ChannelResolvable;
-  nameChannel: ChannelResolvable;
   general: Snowflake;
   responses: Array<[RegExp, string, BufferResolvable?]>;
   botRole: RoleResolvable;

@@ -11,8 +11,6 @@ export const config: TrollConfig = {
     '<:rplat:843164215786340442>',
     '<:wholesome:843164215346069546>'
   ],
-  iconChannel: '841159137781874698',
-  nameChannel: '905249748481634365',
   general: '840829257004875789',
   responses: [
     // if anyone wants to rewrite these regexes PLEASE PR holy shit they're bad
