@@ -22,11 +22,12 @@ export const GambleCommand = new TrollCommand(client, {
       } else if (args[0] > curWallet.balance) {
         message.channel.send('you know you dont have that kind of money');
         return;
-      } else if ((Date.now() - lastGamble?.time) / 1000 < 30) {
-        message.channel.send('slow down man, you\'re only allowed to gamble once every 30 seconds');
+      } else if ((Date.now() - lastGamble?.time) / 1000 < 15) {
+        message.channel.send('slow down man, you\'re only allowed to gamble once every 15 seconds');
         return;
       }
-
+      
+      // if gamble amount is x value... vary answers (poor/rich)
       if (Math.floor(Math.random() * 2) === 1) {
         message.channel.send(`gg! you just turned your **${args[0]}** coins into **${args[0] * 2}**!\nyou've now got **${curWallet.balance + args[0]}** coins`);       
         await wallet.findOneAndUpdate({ id: message.author.id }, { $set: { balance: curWallet.balance + args[0] } });
