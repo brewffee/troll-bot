@@ -63,3 +63,10 @@ export const getEcoPlaceString = (place: number) => {
   else if (Number(lastDigit) >= 4) placeString += 'th';
   return placeString;
 }
+
+export const getLevels = (xp: number) => {
+  return { 
+    value: Math.floor(xp / 500),
+    progression: Math.round(((xp % 500) / 500) * 100) / 100 
+  };
+}
