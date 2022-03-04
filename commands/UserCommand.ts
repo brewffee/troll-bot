@@ -10,11 +10,28 @@ export const UserCommand = new TrollCommand(client, {
   async run(message: Message, args: [User], flags: Map<string, string>) {
     try {
       const user = (args[0] || message.author);
-      const member = await message.guild?.members.fetch(user.id);
+      const member = await message.guild.members.fetch(user.id);
+
+      if (!member) {
+        message.channel.send('if they\'re not in this server then idgaf');
+        return;
+      } else if (member.user.bot) {
+        message.channel.send('no bots (for now)');
+        return;
+      } else if (!await getStats(user.id)) {
+        message.channel.send('their profile deadass dont exist yet');
+        return;
+      }
+
+      // debug above later ???
+
+
       const stats = await getStats(user.id);
       const eco = await getEcoStats(user.id);
+
       const reddit = client.config.reddit;
       const award = (x: number) => x === 1 ? `${reddit[2]} ` : x === 2 ? `${reddit[1]} ` : x === 3 ? `${reddit[0]} ` : '';
+
       const profileEmbed = new MessageEmbed({ 
         title: `${user.username}'s profile`,
         thumbnail: { url: user.displayAvatarURL() },
@@ -28,7 +45,9 @@ export const UserCommand = new TrollCommand(client, {
           { name: 'Joined', value: `<t:${Math.trunc(member.joinedAt as any / 1000)}:R>`, inline: true },
         ],
       })
+
       message.channel.send({ embeds: [profileEmbed] });
+
     } catch (error) {
       return { code: 'ERROR', error: error };
     } finally {
