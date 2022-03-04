@@ -1,6 +1,7 @@
 import { Message, MessageEmbed, User } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
+import { getStats, getEcoStats, getLevels } from '../util/leaderboardUtil';
 
 export const UserCommand = new TrollCommand(client, {
   name: 'user',
@@ -9,9 +10,23 @@ export const UserCommand = new TrollCommand(client, {
   async run(message: Message, args: [User], flags: Map<string, string>) {
     try {
       const user = (args[0] || message.author);
+      const member = await message.guild?.members.fetch(user.id);
+      const stats = await getStats(user.id);
+      const eco = await getEcoStats(user.id);
+      const reddit = client.config.reddit;
+      const award = (x: number) => x === 1 ? `${reddit[2]} ` : x === 2 ? `${reddit[1]} ` : x === 3 ? `${reddit[0]} ` : '';
       const profileEmbed = new MessageEmbed({ 
-        title: `${(args[0] || message.author).username}'s profile`,
-        thumbnail: { url: (args[0] || message.author).displayAvatarURL() }
+        title: `${user.username}'s profile`,
+        thumbnail: { url: user.displayAvatarURL() },
+        fields: [
+          { name: 'XP', value: `${stats.xp}`, inline: true },
+          { name: 'Level', value: `${getLevels(stats.xp).value} (${getLevels(stats.xp).progression}%)`, inline: true },
+          { name: 'Balance', value: `${client.config.coin} ${eco.balance}`, inline: true },
+          { name: 'Ranks', value: `${award(stats.place)}#${stats.place} (xp), ${award(eco.place)}#${eco.place} (eco)`, inline: true },
+          { name: 'Roles', value: `${member?.roles.cache.filter(r => ![message.guild.id, '841295461486428200'].includes(r.id)).sort((a, b) => b.position - a.position).map(r => r.toString()).join(', ')}`, inline: true },
+
+          { name: 'Joined', value: `<t:${Math.trunc(member.joinedAt as any / 1000)}:R>`, inline: true },
+        ],
       })
       message.channel.send({ embeds: [profileEmbed] });
     } catch (error) {
