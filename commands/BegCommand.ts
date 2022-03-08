@@ -31,7 +31,16 @@ export const BegCommand = new TrollCommand(client, {
         'some guy',
         'the impostor from among us',
         'ma man failes',
-        'SkyBlueSeagull'
+        'SkyBlueSeagull',
+        'NBA Youngboy',
+        'Chris Pratt',
+        'CJ',
+        'Patrick Bateman',
+        'Soulja Boy',
+        'Snoop Dogg',
+        'sans undertale',
+        'Jimmy Neutron',
+        'Rick Astley',
       ];
 
       let actions = {
@@ -48,13 +57,13 @@ export const BegCommand = new TrollCommand(client, {
           'awarded you a whopping',
           'presented you with'
         ],
-      unsuccessful: [
-        'robbed you of',
-        'ran away with',
-        'pickpocketed you of your',
-        'stole your',
-        'bullied you into giving',
-        'took your'
+        unsuccessful: [
+          'robbed you of',
+          'ran away with',
+          'pickpocketed you of your',
+          'stole your',
+          'bullied you into giving',
+          'took your'
       ]}
 
       let amounts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 22, 25, 30, 32, 36, 40, 45, 50, 56, 100, 125, 150, 200, 250, 500];
