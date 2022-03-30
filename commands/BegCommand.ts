@@ -41,7 +41,32 @@ export const BegCommand = new TrollCommand(client, {
         'sans undertale',
         'Jimmy Neutron',
         'Rick Astley',
-        'Ayman'
+        'Ayman',
+        'Will Smith',
+        'Schlatt',
+        'Jambo',
+        'Wheels',
+        'your oomfie',
+        'your mutual',
+        'the killer fish from san diego',
+        'John Wick',
+        'John Cena',
+        'The Rock',
+        'Minecraft Steve',
+        'a Minecraft Villager',
+        'a Piglin',
+        'goopert',
+        'King Bach',
+        'Tyler Fortnite Ninja Blevins',
+        'Fortnite Wife',
+        'Foundation',
+        'PETA',
+        'u/dankmemez23130980',
+        'Shrek',
+        'Hillary Clinton',
+        'an ugly fuckin cat',
+        'Mariah Carey',
+        'Faileses himself',
       ];
 
       let actions = {
@@ -56,7 +81,11 @@ export const BegCommand = new TrollCommand(client, {
           'gave you a small loan of',
           'handed you a briefcase containing',
           'awarded you a whopping',
-          'presented you with'
+          'presented you with',
+          'asked you to sing a song. You did well, and they gave you',
+          'gave you a reddit gold and',
+          'gave you a reddit platinum and',
+          'gave you a reddit silver and',
         ],
         unsuccessful: [
           'robbed you of',
@@ -64,7 +93,10 @@ export const BegCommand = new TrollCommand(client, {
           'pickpocketed you of your',
           'stole your',
           'bullied you into giving',
-          'took your'
+          'took your',
+          'asked you to sing a song. You were fucking horrible, and they stole',
+          'walked up to the stage and slapped you in the face, and while they were at it, stole',
+          
       ]}
 
       let amounts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 22, 25, 30, 32, 36, 40, 45, 50, 56, 100, 125, 150, 200, 250, 500];
