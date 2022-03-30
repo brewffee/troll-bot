@@ -14,7 +14,7 @@ export const config: TrollConfig = {
   general: '840829257004875789',
   responses: [
     // if anyone wants to rewrite these regexes PLEASE PR holy shit they're bad
-    [/\b(y((o+u('|’)?r+e?)|(o+|e|a))( are)? m((o+ther+)|(o+|u)m)(m+y+)?)/gi, 'i am doing your mother', './images/mother.png'],
+    [/\b(y((o+u('|’)?r+e?)|(o+|e|a))( +are)? +m((o+ther+)|(o+|u)m)(m+y+)?)/gi, 'i am doing your mother', './images/mother.png'],
     [/\bbu+s{2,}y+/gi, 'hnng <:cum:841142405846925312>'],
     [/\bto+p+/gi, '*bottom'],
     [/🥺|https:\/\/discord\.com\/assets\/6bca769662f755d33514d1f5304c617d\.svg/gi, 'what the fuck is "🥺" i dont speak bottom'],
