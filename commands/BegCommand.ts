@@ -41,6 +41,7 @@ export const BegCommand = new TrollCommand(client, {
         'sans undertale',
         'Jimmy Neutron',
         'Rick Astley',
+        'Ayman'
       ];
 
       let actions = {
