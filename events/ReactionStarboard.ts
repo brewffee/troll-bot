@@ -8,7 +8,7 @@ export const ReactionStarboard = new TrollEvent(client, {
   description: 'add messages to a starboard if it reaches a certain amount of star reactions',
   type: 'messageReactionAdd',
   run: async (client: TrollClient, reaction: MessageReaction, user: User) => {
-    if (reaction.emoji.name != 'star' || reaction.count != 3 || reaction.message.channel.id == '970366685771079810') return;
+    if (reaction.emoji.name != '⭐' || reaction.count != 3 || reaction.message.channel.id == '970366685771079810') return;
     const starboardMessage = await starboard.findOne({ message_id: reaction.message.id });
 
     if (starboardMessage) return; // already in the starboard
