@@ -33,6 +33,6 @@ export const ReactionStarboard = new TrollEvent(client, {
 
     // constuct everything, send message and the files
     return starboardChannel.send({ content: starCount + channelName + displayName + '\n' + messageContent, files })
-      .then(async (message) => await starboard.create({ message_id: reaction.message.id, starboard_message_id: message.id, content: messageContent, star_count: STAR_REQUIREMENT }));
+      .then(async (message) => await starboard.create({ message_id: reaction.message.id, starboard_message_id: message.id, content: messageContent, star_count: reactionCount }));
   },
 });
