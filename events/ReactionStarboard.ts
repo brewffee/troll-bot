@@ -22,7 +22,8 @@ export const ReactionStarboard = new TrollEvent(client, {
       .setFooter({ text: `#${(reaction.message.channel as TextChannel).name}` })
       .setTimestamp(reaction.message.createdTimestamp);
 
-    if (reaction.message.attachments.size > 0 && (reaction.message.attachments.first()?.proxyURL.endsWith('.png') || reaction.message.attachments.first()?.proxyURL.endsWith('.gif'))) embed.setImage(reaction.message.attachments.first()!.proxyURL);
+    const firstAttachment = reaction.message.attachments.first();
+    if (firstAttachment?.proxyURL.endsWith('.png') || firstAttachment?.proxyURL.endsWith('.gif')) embed.setImage(reaction.message.attachments.first()!.proxyURL);
 
     return starboardChannel.send({ embeds: [embed] })
       .then(async () => await starboard.create({ message_id: reaction.message.id }));
