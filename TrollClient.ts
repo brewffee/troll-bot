@@ -39,7 +39,7 @@ export class TrollClient extends Client {
         if (err) throw err;
         files.filter((f) => f.endsWith('.js')).forEach((file) => {
           const event = Object.values(require(`./events/${file}`))[0] as TrollEvent;
-          this.on(event.info.type, event.info.run.bind(null, this));
+          this.on(event.info.type, (...args) => event.info.run(this, ...args));
         });
       });
       mongoose.connect(process.env.MONGO_CONNECTION_STRING);

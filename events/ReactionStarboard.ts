@@ -8,7 +8,7 @@ export const ReactionStarboard = new TrollEvent(client, {
   description: 'add messages to a starboard if it reaches a certain amount of star reactions',
   type: 'messageReactionAdd',
   run: async (client: TrollClient, reaction: MessageReaction, user: User) => {
-    if (reaction.emoji.name != '⭐' || reaction.count != 3 || reaction.message.channel.id == '970366685771079810') return;
+    if (reaction.emoji.name != '⭐' || reaction.count != 3 || reaction.message.author.id == user.id || reaction.message.channel.id == '970366685771079810') return;
     const starboardMessage = await starboard.findOne({ message_id: reaction.message.id });
 
     if (starboardMessage) return; // already in the starboard
@@ -20,6 +20,8 @@ export const ReactionStarboard = new TrollEvent(client, {
       .setColor('#ffd700')
       .setFooter({ text: `#${(reaction.message.channel as TextChannel).name}` })
       .setTimestamp(reaction.message.createdTimestamp);
+
+    if (reaction.message.attachments.size > 0 && (reaction.message.attachments.first()?.proxyURL.endsWith('.png') || reaction.message.attachments.first()?.proxyURL.endsWith('.gif'))) embed.setImage(reaction.message.attachments.first()!.proxyURL);
 
     return starboardChannel.send({ embeds: [embed] })
       .then(async () => await starboard.create({ message_id: reaction.message.id }));
