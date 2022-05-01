@@ -16,7 +16,7 @@ export const ReactionStarboard = new TrollEvent(client, {
     
     const starboardChannel = client.channels.cache.get('970366685771079810') as TextChannel;
     const embed = new MessageEmbed()
-      .setTitle(user.tag)
+      .setTitle(reaction.message.author.tag)
       .setDescription(`${reaction.message.content}\n\n[Jump to message](${reaction.message.url})`)
       .setColor('#ffd700')
       .setFooter({ text: `#${(reaction.message.channel as TextChannel).name}` })
