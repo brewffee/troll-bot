@@ -11,7 +11,7 @@ export const ReactionStarboard = new TrollEvent(client, {
   type: 'messageReactionAdd',
   run: async (client: TrollClient, reaction: MessageReaction, user: User) => {
     const reactionCount = reaction.users.cache.has(reaction.message.author.id) ? reaction.count - 1 : reaction.count;
-    if (reaction.emoji.name != '⭐' || reactionCount < 1 || reaction.message.channel.id == '970366685771079810') return;
+    if (reaction.emoji.name != '⭐' || reactionCount < STAR_REQUIREMENT || reaction.message.channel.id == '970366685771079810') return;
     const starboardMessageData = await starboard.findOne({ message_id: reaction.message.id });
 
     // define shit to make it look nicer lul
