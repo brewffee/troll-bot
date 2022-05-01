@@ -108,7 +108,7 @@ export const BegCommand = new TrollCommand(client, {
           'handed you a briefcase containing',
           'awarded you a whopping',
           'presented you with',
-          'asked you to sing a song. You did well, and they gave you',
+          'asked you to sing a song. you did well, and they gave you',
           'gave you a reddit gold and',
           'gave you a reddit platinum and',
           'gave you a reddit silver and',
@@ -120,7 +120,7 @@ export const BegCommand = new TrollCommand(client, {
           'stole your',
           'bullied you into giving',
           'took your',
-          'asked you to sing a song. You were fucking horrible, and they stole',
+          'asked you to sing a song. you were fucking horrible, and they stole',
           'walked up to the stage and slapped you in the face, and while they were at it, stole',
           
       ]}
