@@ -1,4 +1,4 @@
-import { ImageSize, Message, MessageAttachment, User } from 'discord.js';
+import { type AllowedImageSize, type Message, MessageAttachment, type User } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 
@@ -9,7 +9,7 @@ export const AvatarCommand = new TrollCommand(client, {
   arguments: [{ name: 'User', type: 'USER', required: false }],
   async run(message: Message, args: [User], flags: Map<string, string>) {
     try {
-      let key, val: string, isValid;
+      let key: string, val: string, isValid: boolean;
       if (flags.size > 0) {
         key = flags.entries().next().value[0]; // i really want to name it 'size'
         val = flags.entries().next().value[1];
@@ -17,7 +17,7 @@ export const AvatarCommand = new TrollCommand(client, {
       }
       message.channel.send({
         content: 'lol look at this clown',
-        files: [new MessageAttachment((args[0] || message.author).displayAvatarURL({ format: 'png', size: isValid ? Number(val!) as ImageSize : 512, dynamic: true }))],
+        files: [new MessageAttachment((args[0] || message.author).displayAvatarURL({ format: 'png', size: isValid ? Number(val!) as AllowedImageSize : 512, dynamic: true }))],
       });
     } catch (error) {
       return { code: 'ERROR', error: error };

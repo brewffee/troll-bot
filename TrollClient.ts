@@ -42,7 +42,7 @@ export class TrollClient extends Client {
           this.on(event.info.type, event.info.run.bind(null, this));
         });
       });
-      mongoose.connect(process.env.MONGO_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
+      mongoose.connect(process.env.MONGO_CONNECTION_STRING);
       this.login().then(() => this.guilds.cache.first().members.fetch({ force: true }));
     };
     this.db = mongoose.connection;
