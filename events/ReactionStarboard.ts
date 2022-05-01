@@ -15,9 +15,11 @@ export const ReactionStarboard = new TrollEvent(client, {
     if (starboardMessage) return; // already in the starboard
     
     const starboardChannel = client.channels.cache.get('970366685771079810') as TextChannel;
+    let description = reaction.message.content.length > 1024 ? reaction.message.content.substring(0, 1021) + '...' : reaction.message.content;
+    if (reaction.message.stickers.size > 0) description += `\n*contains sticker*`; 
     const embed = new MessageEmbed()
       .setAuthor({ name: reaction.message.author.tag, iconURL: reaction.message.author.displayAvatarURL() })
-      .setDescription(`${reaction.message.content}\n\n[Jump to message](${reaction.message.url})`)
+      .setDescription(`${description}\n\n[Jump to message](${reaction.message.url})`)
       .setColor('#ffd700')
       .setFooter({ text: `#${(reaction.message.channel as TextChannel).name}` })
       .setTimestamp(reaction.message.createdTimestamp);
