@@ -24,6 +24,7 @@ export const ReactionStarboard = new TrollEvent(client, {
 
     const firstAttachment = reaction.message.attachments.first();
     if (firstAttachment?.proxyURL.endsWith('.png') || firstAttachment?.proxyURL.endsWith('.gif')) embed.setImage(reaction.message.attachments.first()!.proxyURL);
+    else if (firstAttachment?.proxyURL.endsWith('.mp4')) embed.setDescription(`${embed.description}\n\n*contains video*`);
 
     return starboardChannel.send({ embeds: [embed] })
       .then(async () => await starboard.create({ message_id: reaction.message.id }));
