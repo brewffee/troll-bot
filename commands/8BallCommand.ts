@@ -1,4 +1,4 @@
-import { ImageSize, Message, MessageAttachment, User } from 'discord.js';
+import type { Message } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 

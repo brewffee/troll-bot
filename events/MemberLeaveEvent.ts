@@ -1,4 +1,4 @@
-import { GuildAuditLogsEntry, GuildMember, TextChannel, User } from 'discord.js';
+import { GuildAuditLogsEntry, GuildAuditLogsResolvable, GuildMember, TextChannel, User } from 'discord.js';
 import { wallet } from '../models/Wallet';
 import { xp } from '../models/xp';
 import { client, TrollClient } from '../TrollClient';
@@ -11,7 +11,7 @@ export const MemberLeaveEvent = new TrollEvent(client, {
   run: async (client: TrollClient, member: GuildMember) => {
     const channel = client.channels.cache.get(client.config.general)! as TextChannel;
     setTimeout(async () => {
-      const { action, target }: GuildAuditLogsEntry = (await member.guild.fetchAuditLogs()).entries.first()!;
+      const { action, target } = <GuildAuditLogsEntry<GuildAuditLogsResolvable>>(await member.guild.fetchAuditLogs()).entries.first()!;
       if ((target as User).id === member.user.id && ['MEMBER_KICK', 'MEMBER_BAN_ADD'].includes(action)) {
         switch (action) {
           case 'MEMBER_BAN_ADD':
