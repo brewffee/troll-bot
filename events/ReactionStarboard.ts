@@ -16,9 +16,9 @@ export const ReactionStarboard = new TrollEvent(client, {
 
     const reactionCount = reaction.users.cache.has(message.author.id) ? reaction.count - 1 : reaction.count;
 
-    console.log(reactionCount < STAR_REQUIREMENT, reactionCount, STAR_REQUIREMENT);
     if (reaction.emoji.name != '⭐' || reactionCount < STAR_REQUIREMENT || message.channel.id == '970366685771079810') return;
     const starboardMessageData = await starboard.findOne({ message_id: message.id });
+    console.log ('starboardMessageData', starboardMessageData);
 
     // define shit to make it look nicer lul
     const starboardChannel = client.channels.cache.get('970366685771079810') as TextChannel;
@@ -59,6 +59,8 @@ export const ReactionStarboard = new TrollEvent(client, {
  
     // constuct everything, send message and the files
     return starboardChannel.send({ content: starCount + channelName + displayName + '\n' + messageContent, files, embeds })
-      .then(async (message) => await starboard.create({ message_id: message.id, starboard_message_id: message.id, content: messageContent, star_count: reactionCount }));
+      .then(async (starboardMessage) => await starboard.create(
+        { message_id: message.id, starboard_message_id: starboardMessage.id, content: messageContent, star_count: reactionCount }
+      ));
   },
 });
