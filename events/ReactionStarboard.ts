@@ -1,9 +1,9 @@
-import { MessageReaction, TextChannel, User } from 'discord.js';
+import { MessageAttachment, MessageReaction, TextChannel, User } from 'discord.js';
+import { starboard } from '../models/Starboard';
 import { client, type TrollClient } from '../TrollClient';
 import { TrollEvent } from '../TrollEvent';
-import { starboard } from '../models/Starboard';
 
-const STAR_REQUIREMENT = 3;
+const STAR_REQUIREMENT = 2;
 
 export const ReactionStarboard = new TrollEvent(client, {
   name: 'ReactionStarboard',
@@ -28,11 +28,32 @@ export const ReactionStarboard = new TrollEvent(client, {
         .then(async () => await starboard.findOneAndUpdate({ message_id: reaction.message.id }, { star_count: reactionCount }));
     }
 
-    const messageContent = reaction.message.content.length > 1024 ? reaction.message.content.substring(0, 1021) + '...' : reaction.message.content;
-    const files = reaction.message.attachments.size > 0 ? Array.from(reaction.message.attachments.values()) : undefined;
+    // trim message content; get first attachment
+    let messageContent = reaction.message.content.length > 1024 ? reaction.message.content.substring(0, 1021) + '...' : reaction.message.content;
+    const files = reaction.message.attachments.size > 0 ? [reaction.message.attachments.first()] : undefined;
+
+    // handle overflow files
+    const fileCount = reaction.message.attachments.size;    
+    if (fileCount > 1) {
+        messageContent += '\n*+' + (fileCount - 1) + ' file' + (fileCount > 2 ? 's' : '') + '*';
+    }
+
+    // handle added stickers (filter out JSON stickers)
+    const sticker = reaction.message.stickers.first();
+    if (sticker) { 
+        // check if sticker url ends in JSON or PNG
+        if (sticker.url.endsWith('.png')) {
+            files.push(new MessageAttachment(sticker.url));
+        } else {
+            messageContent += '* and 1 sticker*';
+        }
+    }
+
+    // get message embeds for copying
+    const embeds = reaction.message.embeds;
 
     // constuct everything, send message and the files
-    return starboardChannel.send({ content: starCount + channelName + displayName + '\n' + messageContent, files })
+    return starboardChannel.send({ content: starCount + channelName + displayName + '\n' + messageContent, files, embeds })
       .then(async (message) => await starboard.create({ message_id: reaction.message.id, starboard_message_id: message.id, content: messageContent, star_count: reactionCount }));
   },
 });
