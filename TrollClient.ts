@@ -25,7 +25,7 @@ export class TrollClient extends Client {
   public config!: TrollConfig;
   public db: mongoose.Connection;
   constructor() {
-    super({ intents: 3655 });
+    super({ intents: 3655, partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
     this.load = (config: TrollConfig) => {
       this.config = config;
       readdir(`./out/commands`, (err, files) => {
