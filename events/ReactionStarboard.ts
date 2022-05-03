@@ -3,7 +3,7 @@ import { starboard } from '../models/Starboard';
 import { client, type TrollClient } from '../TrollClient';
 import { TrollEvent } from '../TrollEvent';
 
-const STAR_REQUIREMENT = 1;
+const STAR_REQUIREMENT = 2;
 
 export const ReactionStarboard = new TrollEvent(client, {
   name: 'ReactionStarboard',
@@ -13,10 +13,13 @@ export const ReactionStarboard = new TrollEvent(client, {
 
     const reaction = await messageReaction.fetch();
     const message = await reaction.message.fetch();
-
-    const reactionCount = reaction.users.cache.has(message.author.id) ? reaction.count - 1 : reaction.count;
+  
+    const reactionUserCache = await reaction.users.fetch();
+    const reactionCount = reactionUserCache.has(message.author.id) ? reaction.count - 1 : reaction.count;
 
     if (reaction.emoji.name != '⭐' || reactionCount < STAR_REQUIREMENT || message.channel.id == '970366685771079810') return;
+
+    // check if the message is already in the starboard
     const starboardMessageData = await starboard.findOne({ message_id: message.id });
     console.log ('starboardMessageData', starboardMessageData);
 
@@ -58,7 +61,7 @@ export const ReactionStarboard = new TrollEvent(client, {
     const embeds = message.embeds;
  
     // constuct everything, send message and the files
-    return starboardChannel.send({ content: starCount + channelName + displayName + '\n' + messageContent, files, embeds })
+    return starboardChannel.send({ content: starCount + channelName + displayName + '\n' + messageContent, files, embeds, allowedMentions: { users: [] } })
       .then(async (starboardMessage) => await starboard.create(
         { message_id: message.id, starboard_message_id: starboardMessage.id, content: messageContent, star_count: reactionCount }
       ));
