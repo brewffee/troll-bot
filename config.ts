@@ -15,7 +15,8 @@ export const config: TrollConfig = {
   responses: [
     // if anyone wants to rewrite these regexes PLEASE PR holy shit they're bad
     [/\b(y((o+u('|’)?r+e?)|(o+|e|a))( +are)? +m((o+ther+)|(o+|u)m)(m+y+)?)/gi, 'i am doing your mother', './images/mother.png'],
-    [/\b((amo+n?g+)|s+u+s+|impost|vent|pretender|cre+wma+te|medbay|electrical)/gi, 'SUSSY!', './images/amogsus.png']
+    [/\b((amo+n?g+)|s+u+s+|impost|vent|pretender|cre+wma+te|medbay|electrical)/gi, 'SUSSY!', './images/amogsus.png'],
+    [/.{500}/g, ' ', './images/myreaction.png'],
   ],
   botRole: '841267799787438090',
   memberRole: '841295461486428200',
