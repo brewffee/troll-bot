@@ -58,10 +58,10 @@ export const ReactionStarboard = new TrollEvent(client, {
     }
 
     // get message embeds for copying
-    const embeds = message.embeds;
+    // const embeds = message.embeds;
  
     // constuct everything, send message and the files
-    return starboardChannel.send({ content: starCount + channelName + displayName + '\n' + messageContent, files, embeds, allowedMentions: { users: [] } })
+    return starboardChannel.send({ content: starCount + channelName + displayName + '\n' + messageContent, files, allowedMentions: { users: [] } })
       .then(async (starboardMessage) => await starboard.create(
         { message_id: message.id, starboard_message_id: starboardMessage.id, content: messageContent, star_count: reactionCount }
       ));
