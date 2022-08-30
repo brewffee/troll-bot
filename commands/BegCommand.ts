@@ -119,10 +119,7 @@ export const BegCommand = new TrollCommand(client, {
           'pickpocketed you of your',
           'stole your',
           'bullied you into giving',
-          'took your',
-          'asked you to sing a song. you were fucking horrible, and they stole',
-          'walked up to the stage and slapped you in the face, and while they were at it, stole',
-          
+          'took your',          
       ]}
 
       let amounts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 22, 25, 30, 32, 36, 40, 45, 50, 56, 100, 125, 150, 200, 250, 500];
