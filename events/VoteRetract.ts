@@ -13,7 +13,7 @@ export const VoteRetractEvent = new TrollEvent(client, {
     if (message.author.bot || reaction.users.cache.has(message.author.id)) return;
     const xpEntry = await xp.findOne({ id: message.author.id });
 
-    const change = reaction.emoji.name === 'upvote' ? -1 : 1;
+    const change = reaction.emoji.name === 'upvote' ? -5 : 100;
     if (xpEntry) {
       await xp.findOneAndUpdate({ id: message.author.id }, { $set: { xp: xpEntry.xp + change } })
     } else {
