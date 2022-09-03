@@ -51,4 +51,8 @@ export class TrollClient extends Client {
 
 export const client = new TrollClient();
 
+// after 2 hours, kill the process
+// the bot will be restarted by a manager
+setTimeout(() => process.exit(0), 2 * 60 * 60 * 1000);
+
 client.load(config);
