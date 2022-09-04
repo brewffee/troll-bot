@@ -14,10 +14,10 @@ export const ReactionXP = new TrollEvent(client, {
     const message = reaction.message as Message;
     const xpEntry = await xp.findOne({ id: message.author.id });
     const reactionValues = {
-      rplat: 15,
-      rgold: 10,
-      rsilver: 5,
-      wholesome: 3,
+      rplat: 30,
+      rgold: 20,
+      rsilver: 10,
+      wholesome: 6,
     } as Record<string, number>;
 
     if (!isTroll && (Date.now() - xpEntry.earnedAt) / 1000 < 30) return; // console.log('already earned in the last 30s!');
