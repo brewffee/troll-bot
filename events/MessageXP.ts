@@ -12,7 +12,7 @@ export const MessageXP = new TrollEvent(client, {
     const xpEntry = await xp.findOne({ id: message.author.id });
 
     if (xpEntry) {
-      if ((Date.now() - xpEntry.earnedAt) / 1000 < 30) return; //console.log('already earned in the last 30s!');
+      if ((Date.now() - xpEntry.earnedAt) / 1000 < 15) return;
       await xp.findOneAndUpdate({ id: message.author.id }, { $set: { xp: xpEntry.xp + 1, earnedAt: Date.now() } })
     } else {
       await (new xp({ id: message.author.id, xp: 1 })).save()
