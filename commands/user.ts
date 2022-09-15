@@ -29,8 +29,12 @@ export const UserCommand = new TrollCommand(client, {
       const stats = await getStats(user.id);
       const eco = await getEcoStats(user.id);
 
-      const reddit = client.config.reddit;
+      const { reddit } = client.config;
       const award = (x: number) => x === 1 ? `${reddit[2]} ` : x === 2 ? `${reddit[1]} ` : x === 3 ? `${reddit[0]} ` : '';
+
+      // if they joined before december 9th, 2021, they're an og member
+      const og = member.joinedTimestamp < 1639040000000;
+
 
       const profileEmbed = new MessageEmbed({ 
         title: `${user.username}'s profile`,
@@ -39,7 +43,7 @@ export const UserCommand = new TrollCommand(client, {
           { name: 'XP', value: `${stats.xp}`, inline: true },
           { name: 'Level', value: `${getLevels(stats.xp).value} (${getLevels(stats.xp).progression}%)`, inline: true },
           { name: 'Balance', value: `${client.config.coin} ${eco.balance}`, inline: true },
-          { name: 'Ranks', value: `${award(stats.place)}#${stats.place} (xp), ${award(eco.place)}#${eco.place} (eco)`, inline: true },
+          { name: 'Ranks', value: `${og ? reddit[2] + ' **OG MEMBER**\n\n' : '' }${award(stats.place)}#${stats.place} (xp), ${award(eco.place)}#${eco.place} (eco)`, inline: true },
           { name: 'Roles', value: `${member?.roles.cache.filter(r => ![message.guild.id, '841295461486428200'].includes(r.id)).sort((a, b) => b.position - a.position).map(r => r.toString()).join(', ')}`, inline: true },
 
           { name: 'Joined', value: `<t:${Math.trunc(member.joinedAt as any / 1000)}:R>`, inline: true },

@@ -8,7 +8,7 @@ export const MessageXP = new TrollEvent(client, {
   description: 'adds XP based upon user message',
   type: 'messageXP',
   run: async (_client: TrollClient, message: Message) => {
-    /*if (message.author.bot) return;
+    if (message.author.bot) return;
     const user = await UserData.findOne({ id: message.author.id });
 
     if ((Date.now() - user.lastEarned) / 1000 > 15) return;
@@ -17,6 +17,5 @@ export const MessageXP = new TrollEvent(client, {
       { id: message.author.id }, 
       { $inc: { xp: 1 }, lastEarned: Date.now() }
     );
-    */
   },
 });
