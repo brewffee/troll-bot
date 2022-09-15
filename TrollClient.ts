@@ -5,6 +5,7 @@ import { TrollEvent } from './TrollEvent';
 import { config } from './config';
 import mongoose from 'mongoose';
 import { Reminder, ReminderFormat } from './models/Reminder';
+import { checkReminders, loadReminders } from './util/remind';
 
 export interface TrollConfig {
   troll: EmojiResolvable;
@@ -54,40 +55,8 @@ export class TrollClient extends Client {
     this.db = mongoose.connection;
     this.login().then(() => this.guilds.cache.first().members.fetch({ force: true }));
 
-    // Load all reminders from db (THIS GETS MOVED TO A SEPARATE FILE LATER)
-    Reminder.find({}, (err, docs) => {
-      if (err) throw err;
-      for (const doc of docs) {
-        this.reminders.set(doc.id, doc);
-      }
-    });
-
-    // Check reminders every second
-    setInterval(() => {
-      for (const reminder of this.reminders.values()) {
-        console.log(reminder, Date.now());
-        if (reminder.time <= Date.now()) {
-          // if the reminder is off by a long time (more than 5 minutes), express that
-          const offset = Date.now() - reminder.time;
-          const isLate = offset > 300000; 
-
-          if (reminder.direct) {
-            this.users.cache.get(reminder.id).send(reminder.reminder);
-          } else {
-            let guild = this.guilds.cache.first(); // TODO: make this work with multiple guilds
-            let channel = guild.channels.cache.get(reminder.channel) as TextChannel;
-            channel.send(`<@${reminder.id}> ${reminder.reminder}`);
-          }
-
-          // delete the reminder from the db and client.reminders
-          this.reminders.delete(reminder.id);
-          Reminder.deleteOne({ id: reminder.id }, (err) => {
-            if (err) throw err;
-          });
-        }
-      }
-    }, 1000);    
-
+    // Load all reminders and start the check interval
+    loadReminders().then(() => checkReminders()); /* 1000ms */
   }
 }
 
