@@ -2,6 +2,7 @@ import { MessageAttachment, MessageReaction, TextChannel, User } from 'discord.j
 import { starboard } from '../models/Starboard';
 import { client, type TrollClient } from '../TrollClient';
 import { TrollEvent } from '../TrollEvent';
+import { UserData } from '../models/User';
 
 const STAR_REQUIREMENT = 2;
 
@@ -10,7 +11,6 @@ export const ReactionStarboard = new TrollEvent(client, {
   description: 'add messages to a starboard if it reaches a certain amount of star reactions',
   type: 'messageReactionAdd',
   run: async (client: TrollClient, messageReaction: MessageReaction, user: User) => {
-
     const reaction = await messageReaction.fetch();
     const message = await reaction.message.fetch();
   
@@ -32,6 +32,13 @@ export const ReactionStarboard = new TrollEvent(client, {
     if (starboardMessageData) { // already in the starboard
       if (reactionCount <= starboardMessageData.star_count) return;
       const starboardMessage = await starboardChannel.messages.fetch(starboardMessageData.starboard_message_id);
+
+      // give user more xp
+      await UserData.findOneAndUpdate(
+        { id: message.author.id },
+        { $inc: { xp: 1000 } }
+      );
+
       return starboardMessage.edit({ content: starCount + channelName + displayName + '\n' + starboardMessageData.content })
         .then(async () => await starboard.findOneAndUpdate({ message_id: message.id }, { star_count: reactionCount }));
     }
@@ -59,6 +66,12 @@ export const ReactionStarboard = new TrollEvent(client, {
 
     // get message embeds for copying
     // const embeds = message.embeds;
+
+    // award XP to the user
+    await UserData.findOneAndUpdate(
+      { id: message.author.id },
+      { $inc: { xp: 1000 } }
+    );
  
     // constuct everything, send message and the files
     return starboardChannel.send({ content: starCount + channelName + displayName + '\n' + messageContent, files, allowedMentions: { users: [] } })

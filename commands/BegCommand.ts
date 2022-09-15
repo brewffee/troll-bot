@@ -1,14 +1,14 @@
 import { Message } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
-import { wallet } from '../models/Wallet';
+import { UserData } from '../models/User';
 
 export const BegCommand = new TrollCommand(client, {
   name: 'beg',
   description: 'ask for money (L poor)',
   async run(message: Message) {
     try {
-      let curWallet = await wallet.findOne({ id: message.author.id });
+      let user = await UserData.findOne({ id: message.author.id });
 
       // 3/4 chance of success
       let isSuccessful = Math.random() < 0.75;
@@ -149,18 +149,19 @@ export const BegCommand = new TrollCommand(client, {
       let response = `**${outcome[0]}** ${outcome[1]} **${outcome[2]}** coins `;
       if (!isSuccessful) response += client.config.troll;
 
-      if (isSuccessful) {
-        if (curWallet)
-          await wallet.findOneAndUpdate({ id: message.author.id }, { $set: { balance: curWallet.balance + (outcome[2] as number)} });
-        else
-          await (new wallet({ id: message.author.id, balance: outcome[2]})).save();
-      } else {
-        if (curWallet)
-          await wallet.findOneAndUpdate({ id: message.author.id }, { $set: { balance: outcome[2] > curWallet.balance ? 0 : curWallet.balance - (outcome[2] as number)} });
-        else
-          response = `**${outcome[0]}** tried to rob you of your money, but you're broke as fuck! lmfao !!!`;
+      await UserData.findOneAndUpdate(
+        { id: message.author.id }, 
+        (isSuccessful) ? { $set: { balance: user.balance + (outcome[2] as number) } }
+        : { $set: { balance: outcome[2] > user.balance ? 0 : user.balance - (outcome[2] as number)} }
+      );
+
+      if (outcome[2] > user.balance && user.balance > 0) {
+        response = response.replace(`**${outcome[2]}**`, `**${user.balance}**`);
+      } else if (user.balance === 0) {
+        // bro is broke
+        response = `**${outcome[0]}** tried to rob you of your money, but you're broke as fuck! lmfao !!!`;
       }
-      
+
       message.channel.send(response);
       
     } catch (error) {

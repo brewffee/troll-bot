@@ -1,7 +1,8 @@
 import { Message, User } from 'discord.js';
-import { wallet } from '../models/Wallet';
+import { UserData } from '../models/User';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
+import { humanize } from '../util/leaderboardUtil';
 
 export const BalanceCommand = new TrollCommand(client, {
   name: 'balance',
@@ -10,8 +11,9 @@ export const BalanceCommand = new TrollCommand(client, {
   arguments: [{ name: 'User', type: 'USER', required: false }],
   async run(message: Message, args: [User]) {
     try {
-      let curWallet = await wallet.findOne({ id: (args[0] || message.author).id });
-      if (!curWallet || curWallet.balance <= 0) {
+      let balance = (await UserData.findOne({ id: message.author.id })).balance; 
+
+      if (balance === 0) {
         message.channel.send(`${!args[0] || args[0] === message.author ? 'you' : 'they'} broke as fuck!`);
         return;
       }
@@ -20,7 +22,7 @@ export const BalanceCommand = new TrollCommand(client, {
         (args[0]
           ? `${args[0].username.toLowerCase()}'s `
           : `you've `
-        ) + `got ${client.config.coin} **${curWallet.balance}** in the bank 😎`
+        ) + `got ${client.config.coin} **${humanize(balance)}** in the bank 😎`
       );
 
     } catch (error) {

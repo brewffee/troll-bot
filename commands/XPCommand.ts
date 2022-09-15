@@ -1,8 +1,8 @@
 import { Message, User } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
-import { xp } from '../models/xp';
-import { getStats } from '../util/leaderboardUtil';
+import { getStats, humanize } from '../util/leaderboardUtil';
+import { UserData } from '../models/User';
 
 export const XPCommand = new TrollCommand(client, {
   name: 'xp',
@@ -11,8 +11,8 @@ export const XPCommand = new TrollCommand(client, {
   arguments: [{ name: 'User', type: 'USER', required: false }],
   async run(message: Message, args: [User]) {
     try {
-      let a = await xp.findOne({ id: (args[0] || message.author).id });
-      if (!a) {
+      let user = await UserData.findOne({ id: (args[0] || message.author).id });
+      if (user.xp <= 0) {
         message.channel.send(`${!args[0] || args[0] === message.author ? 'you' : 'they'} dont have any xp yet!`);
       }
 
@@ -21,7 +21,7 @@ export const XPCommand = new TrollCommand(client, {
       message.channel.send(
         (args[0]
           ? `${args[0].username.toLowerCase()} has **${stats.xp}** karma, placing them at`
-          : `you've got **${stats.xp}** karma, placing you at`
+          : `you've got **${humanize(stats.xp)}** karma, placing you at`
         ) + ` ${stats.place < 4 ? awards[stats.place - 1] + ' ' : ''}**#${stats.place}** in trolling ${client.config.troll}`
       );
 

@@ -1,69 +1,124 @@
 import { Guild, Snowflake } from "discord.js";
-import { wallet } from "../models/Wallet";
-import { xp } from "../models/xp";
 import { client } from "../TrollClient";
 import { quickSort } from "./quickSort";
+import { UserData } from "../models/User";
 
-export const getLeaderboard = async (guild: Guild) => {
-  const xpshitList = await xp.find({});
-  const sortedList = quickSort(xpshitList.map(shitter => [shitter.id, shitter.xp]), 0, xpshitList.length - 1);
-  const topTwenty = sortedList.filter((item, ind) => ind < 20);
-  const lb = topTwenty.reduce((acc, cur) => {
-    if (cur[1] <= 0) return acc;
-    let pos = acc.replace(/[^\n]/g, '').length + 1;
-    const awards = ['<:rplat:843164215786340442>', '<:rgold:843160855234215968>', '<:rsilver:843164309735735316>'];
-    return `${acc}\n${pos < 4 ? awards[pos - 1] + ' ' : ''}**${pos}.** **${guild.members.cache.get(cur[0])?.user.tag}** with **${cur[1].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}** karma`
+// for lb functions
+const awards = [
+  client.config.reddit[2], // Platinum
+  client.config.reddit[1], // Gold
+  client.config.reddit[0], // Silver
+];
+
+export const humanize = (num: number) => {
+  // formats numbers to be human readable (e.g. 1000 -> 1,000)
+  return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+export const getLeaderboard = async () => {
+  // get all users in the guild and sort them by xp (preserve top 10)
+  const users = await UserData.find({});
+  const sorted = quickSort(users.map(shitter => [shitter.id, shitter.xp]), 0, users.length - 1);
+  const topTen = sorted.filter((_, i) => i < 10); 
+
+  // fetch all users
+  client.guilds.cache.first().members.fetch({ force: true });
+
+  // "**4**. User#0000 - 1234 karma"
+  const leaderboard = topTen.reduce((str, curData) => { 
+    const [id, xp] = curData; 
+    if (xp <= 0) return str; // skip if no xp 
+
+    // Placement (award or numeric)
+    let place: string; console.log('step4. b'); 
+    let pos = topTen.findIndex(item => item[0] === id) + 1;
+
+    if (pos < 4) place = `${awards[pos - 1]} `;
+    else place = `**${pos}.** `;
+
+    // User tag (id if there's a problem)
+    let user = client.guilds.cache.first().members.cache.get(id as Snowflake)?.user.tag || `Unknown User (${id})`;
+
+    // append and continue :3
+    return str + `${place} **${user}** - **${humanize(xp)}** karma\n`;
   }, '');
-  return lb;
+
+  return leaderboard; 
 }
 
 export const getStats = async (me: Snowflake) => {
-  const xpshitList = await xp.find({});
-  const sortedList = quickSort(xpshitList.map(shitter => [shitter.id, shitter.xp]), 0, xpshitList.length - 1);
-  return sortedList.map((item, ind) => ({ id: item[0], xp: item[1], place: ind + 1 })).filter(item => item.id == me)[0];
+  // get all users
+  const users = await UserData.find({});
+  const sorted = quickSort(users.map(shitter => [shitter.id, shitter.xp]), 0, users.length - 1);
+  // return { place: 1, xp: 1 }
+  const myStats = sorted.find(item => item[0] === me);
+
+  return {
+    place: sorted.findIndex(item => item[0] === me) + 1,
+    xp: myStats[1],
+  };
 }
 
 export const getPlaceString = (place: number) => {
-  let placeString = place.toString();
-  const lastDigit = placeString[placeString.length - 1];
-  if (place >= 4 && place <= 20) placeString += 'th';
-  else if (lastDigit == '1') placeString += 'st';
-  else if (lastDigit == '2') placeString += 'nd';
-  else if (lastDigit == '3') placeString += 'rd';
-  else if (Number(lastDigit) >= 4) placeString += 'th';
-  return placeString;
+  // returns the place as a string (e.g. 1 -> 1st, 2 -> 2nd, 3 -> 3rd, 4 -> 4th, 11 -> 11th, 21 -> 21st, 111 -> 111th)
+  const lastDigit = place % 10;
+  const lastTwoDigits = place % 100;
+
+  if (lastDigit === 1 && lastTwoDigits !== 11) return `${place}st`;
+  if (lastDigit === 2 && lastTwoDigits !== 12) return `${place}nd`;
+  if (lastDigit === 3 && lastTwoDigits !== 13) return `${place}rd`;
+  return `${place}th`;
 }
 
-export const getRichest = async (guild: Guild) => {
-  const moneyshitList = await wallet.find({});
-  const sortedList = quickSort(moneyshitList.map(shitter => [shitter.id, shitter.balance]), 0, moneyshitList.length - 1);
-  const bigGuys = sortedList.filter((item, ind) => ind < 20);
-  const lb = bigGuys.reduce((acc, cur) => {
-    if (cur[1] <= 0) return acc;
-    let pos = acc.replace(/[^\n]/g, '').length + 1;
-    const awards = ['<:rplat:843164215786340442>', '<:rgold:843160855234215968>', '<:rsilver:843164309735735316>'];
-    return `${acc}\n${pos < 4 ? awards[pos - 1] + ' ' : ''}**${pos}.** **${guild.members.cache.get(cur[0])?.user.tag}** with ${client.config.coin}**${cur[1].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}**`
+export const getRichest = async () => {
+  // like lb, but for eco
+  const users = await UserData.find({});
+  const sorted = quickSort(users.map(shitter => [shitter.id, shitter.balance]), 0, users.length - 1);
+  const topTen = sorted.filter((_, i) => i < 10);
+
+  // fetch all users
+  client.guilds.cache.first().members.fetch({ force: true });
+
+  const leaderboard = topTen.reduce((str, curData) => {
+    const [id, balance] = curData;
+    if (balance <= 0) return str; // no broke boys here
+
+    // Placement
+    let place: string;
+    let pos = topTen.findIndex(item => item[0] === id) + 1;
+
+    if (pos < 4) place = `${awards[pos - 1]} `;
+    else place = `**${pos}.** `;
+
+    // User tag (id if there's a problem)
+    let user = client.guilds.cache.first().members.cache.get(id as Snowflake)?.user.tag || `Unknown User (${id})`;
+
+    // append and continue :3
+    return str + `${place} **${user}** - ${client.config.coin} **${humanize(balance)}**\n`;
   }, '');
-  return lb;
+
+  return leaderboard;
 }
 
 export const getEcoStats = async (me: Snowflake) => {
-  const moneyshitList = await wallet.find({});
-  const sortedList = quickSort(moneyshitList.map(shitter => [shitter.id, shitter.balance]), 0, moneyshitList.length - 1);
-  return sortedList.map((item, ind) => ({ id: item[0], balance: item[1], place: ind + 1 })).filter(item => item.id == me)[0];
+  // get all users
+  const users = await UserData.find({});
+  const sorted = quickSort(users.map(shitter => [shitter.id, shitter.balance]), 0, users.length - 1);
+  // return { place: 1, balance: 1 }
+  const myStats = sorted.find(item => item[0] === me);
+
+  return {
+    place: sorted.findIndex(item => item[0] === me) + 1,
+    balance: myStats[1]
+  };
 }
 
 export const getEcoPlaceString = (place: number) => {
-  let placeString = place.toString();
-  const lastDigit = placeString[placeString.length - 1];
-  if (place >= 4 && place <= 20) placeString += 'th';
-  else if (lastDigit == '1') placeString += 'st';
-  else if (lastDigit == '2') placeString += 'nd';
-  else if (lastDigit == '3') placeString += 'rd';
-  else if (Number(lastDigit) >= 4) placeString += 'th';
-  return placeString;
+  // Compatibility only, removing soon
+  return getPlaceString(place);
 }
 
+// not finished
 export const getLevels = (xp: number) => {
   return { 
     value: Math.floor(xp / 500),

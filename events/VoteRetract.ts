@@ -1,7 +1,7 @@
 import { Message, MessageReaction, User } from 'discord.js';
 import { client, TrollClient } from '../TrollClient';
 import { TrollEvent } from '../TrollEvent';
-import { xp } from '../models/xp';
+import { UserData } from '../models/User';
 
 export const VoteRetractEvent = new TrollEvent(client, {
   name: 'VoteRetract',
@@ -11,13 +11,10 @@ export const VoteRetractEvent = new TrollEvent(client, {
     if (!['downvote', 'upvote'].includes(reaction.emoji.name)) return;
     const message = reaction.message as Message;
     if (message.author.bot || reaction.users.cache.has(message.author.id)) return;
-    const xpEntry = await xp.findOne({ id: message.author.id });
 
-    const change = reaction.emoji.name === 'upvote' ? -5 : 100;
-    if (xpEntry) {
-      await xp.findOneAndUpdate({ id: message.author.id }, { $set: { xp: xpEntry.xp + change } })
-    } else {
-      await (new xp({ id: message.author.id, xp: change })).save()
-    }
+    await UserData.findOneAndUpdate(
+      { id: message.author.id },
+      { $inc: { xp: reaction.emoji.name === 'upvote' ? -5 : 100    } },
+    );
   },
 });

@@ -1,7 +1,7 @@
 import { Message, MessageReaction, User } from 'discord.js';
 import { client, TrollClient } from '../TrollClient';
 import { TrollEvent } from '../TrollEvent';
-import { xp } from '../models/xp';
+import { UserData } from '../models/User';
 
 export const ReactionXP = new TrollEvent(client, {
   name: 'ReactionXP',
@@ -12,7 +12,7 @@ export const ReactionXP = new TrollEvent(client, {
     const isTroll = user === client.user;
     if (!isTroll || reaction.emoji.name === 'cakeday') return;
     const message = reaction.message as Message;
-    const xpEntry = await xp.findOne({ id: message.author.id });
+    const userDB = await UserData.findOne({ id: message.author.id });
     const reactionValues = {
       rplat: 30,
       rgold: 20,
@@ -20,8 +20,12 @@ export const ReactionXP = new TrollEvent(client, {
       wholesome: 6,
     } as Record<string, number>;
 
-    if (!isTroll && (Date.now() - xpEntry.earnedAt) / 1000 < 30) return; // console.log('already earned in the last 30s!');
+    if (!isTroll && (Date.now() - userDB.lastEarned) / 1000 < 15) return; 
+    
     let increment = reactionValues[reaction.emoji.name!] - 1;
-    await xp.findOneAndUpdate({ id: message.author.id }, { $set: { xp: (xpEntry.xp ?? 0) + increment } })
+    await UserData.findOneAndUpdate(
+      { id: message.author.id },
+      { $inc: { xp: increment }, lastEarned: Date.now() },
+    );
   },
 });

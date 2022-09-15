@@ -1,8 +1,7 @@
 import { Message } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
-import { daily } from '../models/DailyCoins';
-import { wallet } from '../models/Wallet';
+import { UserData } from '../models/User';
 
 export const DailyCommand = new TrollCommand(client, {
   name: 'daily',
@@ -10,8 +9,7 @@ export const DailyCommand = new TrollCommand(client, {
   description: 'collect your daily coins',
   async run(message: Message) {
     try {
-      const curWallet = await wallet.findOne({ id: message.author.id });
-      const lastDaily = await daily.findOne({ id: message.author.id });
+      const user = await UserData.findOne({ id: message.author.id });
 
       const randomEvent = () => {
         let events = ['tax', 'bills', 'rob', 'gas', 'lost'];
@@ -20,7 +18,7 @@ export const DailyCommand = new TrollCommand(client, {
         switch (chosen) {
           case 'tax':
             message = 'uh oh! looks like you gotta pay taxes before you cash in :)))\n*2% of your total wallet has been withdrawn*\n\n';
-            deficit = Math.round(curWallet.balance * 0.02)
+            deficit = Math.round(user.balance * 0.02)
             break;
           case 'bills':
             message = 'ouch! you\'re super behind on your bills!\n*100 coins from your daily were paid to compensate*\n\n';
@@ -28,7 +26,7 @@ export const DailyCommand = new TrollCommand(client, {
             break;
           case 'rob':
             message = 'oh no! you\'ve been robbed!\n*600 coins were found missing from your wallet*\n\n';
-            deficit = curWallet.balance > 600 ? 600 : curWallet.balance;
+            deficit = user.balance > 600 ? 600 : user.balance;
             break;
           case 'gas':
             message = 'you ran out of gas on the way to collect your money\n*50 coins were paid at the gas station*\n\n';
@@ -36,7 +34,7 @@ export const DailyCommand = new TrollCommand(client, {
             break;
           case 'lost':
             message = 'yikes! looks like you\'ve dropped some of your money somewhere\n*300 coins were missing*\n\n';
-            deficit = curWallet.balance > 300 ? 300 : curWallet.balance;
+            deficit = user.balance > 300 ? 300 : user.balance;
             break;
           default:
             message = 'heres ya daily **250** coins';
@@ -47,21 +45,21 @@ export const DailyCommand = new TrollCommand(client, {
         return { message, deficit, chosen };
       }
 
-      if (!curWallet || !lastDaily || (Date.now() - lastDaily.collectedAt) >= (1000 * 60 * 60 * 24)) {
+      if ((Date.now() - user.lastDaily) >= (1000 * 60 * 60 * 24)) {
         const evt = randomEvent();
         message.channel.send(evt.message);
 
-        if (curWallet)
-          await wallet.findOneAndUpdate({ id: message.author.id }, { $set: { balance: (curWallet.balance + 250) - evt.deficit } });
-        else
-          await (new wallet({ id: message.author.id, balance: 250 - evt.deficit < 250 ? evt.deficit : 250})).save();
-
-        if (lastDaily)
-          await daily.findOneAndUpdate({ id: message.author.id }, { $set: { collectedAt: Date.now() } });
-        else
-          await (new daily({ id: message.author.id, collectedAt: Date.now() })).save();
+        await UserData.findOneAndUpdate(
+          { id: message.author.id }, 
+          { 
+            $set: { 
+              balance: (user.balance + 250) - evt.deficit,
+              lastDaily: Date.now()
+            } 
+          }
+        );
       } else {
-        message.channel.send(`you collected your daily <t:${Math.trunc(lastDaily.collectedAt / 1000)}:R>, chill out`);
+        message.channel.send(`you collected your daily <t:${Math.trunc(user.lastDaily / 1000)}:R>, chill out`);
       }
 
     } catch (error) {

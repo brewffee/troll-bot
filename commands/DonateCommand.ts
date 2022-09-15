@@ -1,7 +1,7 @@
 import { Message, User } from 'discord.js';
-import { wallet } from '../models/Wallet';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
+import { UserData } from '../models/User';
 
 export const DonateCommand = new TrollCommand(client, {
   name: 'donate',
@@ -13,14 +13,15 @@ export const DonateCommand = new TrollCommand(client, {
   ],
   async run(message: Message, args: [User, number]) {
     try {
-      let curWallet = await wallet.findOne({ id: message.author.id });
-      if (!curWallet || curWallet.balance <= 0) {
+      const user = await UserData.findOne({ id: message.author.id });
+
+      if (user.balance <= 0) {
         message.channel.send('you dont have any money to give away nimbus');
         return;
       } else if (!args[0]) {
         message.channel.send('you cant send money to nobody :/');
         return;
-      } else if (curWallet.balance < args[1]) {
+      } else if (user.balance < args[1]) {
         message.channel.send('you cant hand out that kinda money');
         return;
       } else if (!args[1]) {
@@ -28,15 +29,19 @@ export const DonateCommand = new TrollCommand(client, {
         return;
       }
 
-      let destWallet = await wallet.findOne({ id: args[0].id }); 
-      if (destWallet) {
-        await wallet.findOneAndUpdate({ id: args[0].id }, { $set: { balance: destWallet.balance + args[1] } })
-      } else {
-        await (new wallet({ id: args[0].id, balance: args[1] })).save()
-      }
+      let dest = await UserData.findOne({ id: args[0].id });
+
+      await UserData.findOneAndUpdate(
+        { id: args[0].id }, 
+        { $set: { balance: dest.balance + args[1] } }
+      );
+
+      await UserData.findOneAndUpdate(
+        { id: message.author.id },
+        { $set: { balance: user.balance - args[1] } }
+      );
 
       message.channel.send(`you generously gave ${client.config.coin} **${args[1]}** to **${args[0].username}** :)`);
-      await wallet.findOneAndUpdate({ id: message.author.id }, { $set: { balance: curWallet.balance - args[1] } })
 
     } catch (error) {
       return { code: 'ERROR', error: error };

@@ -9,18 +9,25 @@ export const MessageEvent = new TrollEvent(client, {
   type: 'messageCreate',
   run: async (client: TrollClient, message: Message) => {
     if (message.author.bot || !message.member || message.system) return;
+
     // REACTIONS
+    if (/(toledo)|(csh)|(car seat headrest)/gi.test(message.content)) {
+      message.react('<:downvote:875415662489653289>');
+    }
     if (/(((da+y) of )?(bi+r+(th?|f)))|((bi+r+(th?|f))(-| )?)|(ca+ke+\9?)|b(-| )?da+y/gi.test(message.content)) {
       message.react(client.config.cake);
     }
     Math.floor(Math.random() * 10) === 1
       ? message.react(client.config.reddit[Math.floor(Math.random() * 4)])
       : null
+
     // XP
     client.emit('messageXP', message);
+
     // RESPONDER
     if (!message.content.endsWith(client.config.suffix))
       return client.emit('responder', message);
+      
     // COMMANDS
     const data = message.content.replace(client.config.suffix, '').trim().split(/ +/g);
     const [args, flags] = data.slice(1).reduce(

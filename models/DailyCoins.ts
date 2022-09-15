@@ -8,7 +8,7 @@ export interface DailyFormat extends mongoose.Document {
 
 const DailySchema = new mongoose.Schema({
   id: String,
-  collectedAt: { type: Number, default: Date.now() }
+  collectedAt: { type: Number, default: 0 }
 });
 
 export const daily = mongoose.model<DailyFormat>("daily", DailySchema, "daily");

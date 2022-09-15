@@ -1,8 +1,7 @@
 import { Message } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
-import { xp } from '../models/xp';
-import { getLeaderboard, getPlaceString, getStats } from '../util/leaderboardUtil';
+import { getLeaderboard, getPlaceString, getStats, humanize } from '../util/leaderboardUtil';
 
 export const LeaderboardCommand = new TrollCommand(client, {
   name: 'leaderboard',
@@ -10,11 +9,9 @@ export const LeaderboardCommand = new TrollCommand(client, {
   description: 'see how much better everyone is',
   async run(message: Message) {
     try {
-      // allows for getting xp on first msg
-      await xp.findOne({ id: message.author.id });
       const stats = await getStats(message.author.id);
-      const lb = await getLeaderboard(message.guild);
-      message.channel.send(`${lb}\n\nyou're in **${getPlaceString(stats.place)}** with **${stats.xp}** karma`);
+      const lb = await getLeaderboard();
+      message.channel.send(`${lb}\n\nyou're in **${getPlaceString(stats.place)}** with **${humanize(stats.xp)}** karma`);
     } catch (error) {
       return { code: 'ERROR', error: error };
     } finally {
