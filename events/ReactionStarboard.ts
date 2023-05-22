@@ -1,6 +1,6 @@
 import { MessageAttachment, MessageReaction, TextChannel, User } from 'discord.js';
 import { starboard } from '../models/Starboard';
-import { client, type TrollClient } from '../TrollClient';
+import { client, TrollClient } from '../TrollClient';
 import { TrollEvent } from '../TrollEvent';
 import { UserData } from '../models/User';
 

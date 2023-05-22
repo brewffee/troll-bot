@@ -1,3 +1,5 @@
+// Rename to dbUtil.ts ? 
+
 import { Guild, Snowflake } from "discord.js";
 import { client } from "../TrollClient";
 import { quickSort } from "./quickSort";

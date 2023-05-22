@@ -3,14 +3,15 @@ import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 
 export const TestCommand = new TrollCommand(client, {
-  name: 'test',
+  name: 'eval',
   aliases: ['e'],
-  description: 'lists troll data',
+  description: 'evaluates code',
   accessibility: {
     owner: true,
   },
-  async run(message: Message, _1, flags: Map<string, string>) {
+  async run(message: Message, _args, flags: Map<string, string>) {
     try {
+      // redefine args
       const args = message.content.slice(1, message.content.length - (client.config.troll as string).length).trim()
       .split(/ +/g).filter((a) => !/^--(.*)/.test(a));
       try {

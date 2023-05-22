@@ -12,7 +12,7 @@ export const config: TrollConfig = {
     '<:wholesome:843164215346069546>'
   ],
   general: '840829257004875789',
-  responses: [
+  responses: [ // These should probably be called 'triggers' instead 
     // if anyone wants to rewrite these regexes PLEASE PR holy shit they're bad
     [/\b(y((o+u('|’)?r+e?)|(o+|e|a))( +are)? +m((o+ther+)|(o+|u)m)(m+y+)?)/gi, 'i am doing your mother', './images/mother.png'],
     [/\b((amo+n?g+)|s+u+s+|impost|vent|pretender|cre+wma+te|medbay|electrical)/gi, 'SUSSY!', './images/amogsus.png'],
@@ -22,110 +22,172 @@ export const config: TrollConfig = {
   memberRole: '841295461486428200',
   adminRole: '842802299675213824',
   modRole: '842802567499219005',
-}
 
-/* modules 
+  eightball: [
+    'oh yeah',
+    'i think so',
+    '💯',
+    'on god',
+    'sure',
+    'yass',
+    'methinks yes',
+    '<:ben:948262294402531348> yes', // ben
+    'sorry im busy gaming ttyl',
+    'not now',
+    'ratio',
+    'bro i dont know',
+    'uhhh try again',
+    'cant guarantee it',
+    '<:ben:948262294402531348> no', // ben
+    'naur',
+    'i dont think so',
+    'yikes',
+  ],
 
-format for modules:
+  beggars: [
+    'a homeless person',
+    'Elon Musk',
+    'your mother',
+    'your father',
+    'Donald Trump',
+    'i',
+    'Low Tier God',
+    'Doge',
+    'Ben Shapiro',
+    'Mr. Krabs',
+    'aw hell naw my boy spunch bop',
+    'Jonesy',
+    'Eminem',
+    'mocha',
+    'some guy',
+    'the impostor from among us',
+    'ma man failes',
+    'SkyBlueSeagull',
+    'NBA Youngboy',
+    'Chris Pratt',
+    'CJ',
+    'Patrick Bateman',
+    'Soulja Boy',
+    'Snoop Dogg',
+    'sans undertale',
+    'Jimmy Neutron',
+    'Rick Astley',
+    'Ayman',
+    'Will Smith',
+    'Schlatt',
+    'Jambo',
+    'Wheels',
+    'your oomfie',
+    'your mutual',
+    'the killer fish from san diego',
+    'John Wick',
+    'John Cena',
+    'The Rock',
+    'Minecraft Steve',
+    'a Minecraft Villager',
+    'a Piglin',
+    'goopert',
+    'King Bach',
+    'Tyler Fortnite Ninja Blevins',
+    'Fortnite Wife',
+    'Foundation',
+    'PETA',
+    'u/dankmemez23130980',
+    'Shrek',
+    'Hillary Clinton',
+    'an ugly fuckin cat',
+    'Mariah Carey',
+    'Faileses himself',
+    'crewmate',
+    'JACOB',
+    'Mr Black',
+    'Mr. White',
+    'Heisenburg',
+    'Walter White',
+    'JESSE',
+    'Gus',
+    'bat man',
+    'joker',
+    'society',
+    'Mario',
+    'Luigi',
+    'Waluigi',
+    'Dream',
+    'Justin Trudeau',
+    'Obama',
+    'Slenderman',
+    'CSGO Terrorist',
+    'CSGO Counter-Terrorist',
+    'CSGO Hostage',
+    'Twitter',
+    'DaBaby',
+    'Jar Jar Binks',
+    'Joe',
+    'Joe Biden',
+    'Peter Griffin',
+    'Dr. Michael Morbius',
+    'Lebron James',
+    'Goku fortnite',
+    'The Bronze Jade',
+    'Jimmy McGill',
+    'Saul Goodman',
+    'Saul Badman',
+    'Glenn Quagmire',
+    'black ops 3 title screen guy',
+    'Graggle Simpson',
+    'Mr. Incredible',
+    'Uncanny Mr. Incredible',
+    'mr fortnite, the creator of fortnite',
+  ],
 
-//IF ENABLED
-//  feature: {...}
-//IF DISABLED
-//  feature: false | null | undefined
+  begActions: {
+    successful: [
+      'gave you',
+      'tipped you',
+      'handed you',
+      'brought you',
+      'tossed you',
+      'gifted you',
+      'loaned you',
+      'gave you a small loan of',
+      'handed you a briefcase containing',
+      'awarded you a whopping',
+      'presented you with',
+      'asked you to sing a song. you did well, and they gave you',
+      'gave you a reddit gold and',
+      'gave you a reddit platinum and',
+      'gave you a reddit silver and',
+    ],
+    unsuccessful: [
+      'robbed you of',
+      'ran away with',
+      'pickpocketed you of your',
+      'stole your',
+      'bullied you into giving',
+      'took your',          
+  ]},
 
-export const config: TrollConfig = {
-  suffix: '<:troll:891744450752163891>',
-  reactions: {
-    birthday: '<:cakeday:874408986936492082>',
-    awards: {
-      giveXP: true, // this will error if you don't have the xp module enabled
-      types: ['rsilver', 'rgold', 'rplat', 'wholesome'],
-      values: [15, 10, 5, 3],
+  dailyEvents: {
+    bills: {
+      message: 'ouch! you\'re super behind on your bills!\n*100 coins from your daily were paid to compensate*\n\n',
+      amount: 100,
+      chance: 0.1,
     },
-    voting: { // will error without xp module enabled
-      emojis: ['downvote', 'upvote'], // down and up
-      values: [-1, 1],
-    }
-  },
-  autoResponder: {
-    expressions: [
-      /\b(y((o+u('|’)?r+e?)|(o+|e|a))( +are)? +m((o+ther+)|(o+|u)m)(m+y+)?)/gi,
-      /\b((amo+n?g+)|s+u+s+|impost|vent|pretender|cre+wma+te|medbay|electrical)/gi,
-      /.{500}/g,
-    ],
-    responses: [
-      'i am doing your mother',
-      'SUSSY!',
-      ' ', // allow null
-    ],
-    attachments: [ // look for ./images/{name}.png, if not found then use the full value
-      'mother',
-      'amogsus',
-      'myreaction',
-    ],
-  },
-  roles: {
-    bot: '841267799787438090',
-    member: '841295461486428200',
-    admin: '842802299675213824',
-    mod: '842802567499219005',
-  },
-  welcomer: {
-    waitForVerification: true, // with this disabled, server rules and security levels are ignored
-    greetings: [
-      '{member}, you have been trolled !!!11!!11111!1'
-    ],
-    farewells: {
-      leave: [
-        '{memberName} left what the fuck man :('
-      ],
-      ban: [ // if ban is disabled, default to leave
-        'wont be hearing from {member} anymore {troll}'
-      ], 
-      kick: [ // if kick is disabled, but ban isnt, default to ban; otherwise, leave
-        '{member} got ejected :000'
-      ]
-    }
-  },
-  xp: {
-    cooldown: 30, // in seconds
-    amount: 1 // amount of xp to give for each message
-  },
-  starboard: { 
-    channel: '841295461486428200',
-    emoji: '<:star:874408986936492082>',
-    minStars: 3,
-    awardXP: 5, // per star reward
-  },
-  economy: {
-    currency: '<:rcoin:876254633813749780>',
-    gambling: {
-      minBet: 1,
-      maxBet: 'all',
-      odds: 50, // percent chance, can also set to 'house' for a 0 percent chance of winning :troll:
+    rob: {
+      message: 'oh no! you\'ve been robbed!\n*600 coins were found missing from your wallet*\n\n',
+      amount: 600,
+      chance: 0.1,
     },
-    daily: {
-      payout: 250,
-      events: {
-        types: ['tax', 'bills', 'gas', 'rob', 'lost'] // allow pos and neg events
-        // values: -0.02% of bal, -100, -50, -600, -300  
-      }  
+    gas: {
+      message: 'you ran out of gas on the way to collect your money\n*50 coins were paid at the gas station*\n\n',
+      amount: 50,
+      chance: 0.1,
     },
-    begging: {
-      odds: 75, // mostly successful
-      // people: [...]
-      actions: {
-        // successful: [...]
-        // unsuccessful: [...]
-      }
-      amounts: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 22, 25, 30, 32, 36, 40, 45, 50, 56, 100, 125, 150, 200, 250, 500],
-    }
+    lost: {
+      message: 'yikes! looks like you\'ve dropped some of your money somewhere\n*300 coins were missing*\n\n',
+      amount: 300,
+      chance: 0.1,
+    },
   }
 }
 
-// convert this junk into a user friendly config file, maybe some yaml or json
-
-
-
-
-*/

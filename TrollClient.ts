@@ -4,7 +4,7 @@ import { TrollCommand } from './TrollCommand';
 import { TrollEvent } from './TrollEvent';
 import { config } from './config';
 import mongoose from 'mongoose';
-import { Reminder, ReminderFormat } from './models/Reminder';
+import { ReminderFormat } from './models/Reminder';
 import { checkReminders, loadReminders } from './util/remind';
 
 export interface TrollConfig {
@@ -19,6 +19,19 @@ export interface TrollConfig {
   memberRole: RoleResolvable;
   adminRole: RoleResolvable;
   modRole: RoleResolvable;
+
+  eightball: string[];
+  beggars: string[];
+  begActions: { [key: string]: string[] };
+
+  // object:{
+  //  bills: {
+   //   message: 'ouch! you\'re super behind on your bills!\n*100 coins from your daily were paid to compensate*\n\n',
+  //    amount: 100,
+   //  chance: 0.1,
+  //   },
+
+  dailyEvents: { [key: string]: { message: string; amount: number; chance: number } };
 }
 
 export class TrollClient extends Client {

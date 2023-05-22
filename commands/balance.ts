@@ -21,7 +21,7 @@ export const BalanceCommand = new TrollCommand(client, {
       message.channel.send(
         (args[0]
           ? `${args[0].username.toLowerCase()}'s `
-          : `you've `
+          : 'you\'ve '
         ) + `got ${client.config.coin} **${humanize(balance)}** in the bank 😎`
       );
 
