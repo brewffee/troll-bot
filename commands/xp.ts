@@ -1,7 +1,7 @@
 import { Message, User } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
-import { getStats, humanize } from '../util/leaderboardUtil';
+import { getStats, humanize } from '../util/dbUtil';
 import { UserData } from '../models/User';
 
 export const XPCommand = new TrollCommand(client, {

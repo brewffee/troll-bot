@@ -2,7 +2,7 @@ import { Message, User } from 'discord.js';
 import { UserData } from '../models/User';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
-import { humanize } from '../util/leaderboardUtil';
+import { humanize } from '../util/dbUtil';
 
 export const BalanceCommand = new TrollCommand(client, {
   name: 'balance',

@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
-import { getEcoStats, getPlaceString, getRichest, humanize } from '../util/leaderboardUtil';
+import { getEcoStats, getPlaceString, getRichest, humanize } from '../util/dbUtil';
 
 export const LeaderboardCommand = new TrollCommand(client, {
   name: 'rich',

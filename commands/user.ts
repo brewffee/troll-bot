@@ -1,13 +1,13 @@
 import { Message, MessageEmbed, User } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
-import { getStats, getEcoStats, getLevels } from '../util/leaderboardUtil';
+import { getStats, getEcoStats, getLevels } from '../util/dbUtil';
 
 export const UserCommand = new TrollCommand(client, {
   name: 'user',
   description: 'check out people\'s stuff',
   arguments: [{ name: 'User', type: 'USER', required: false }],
-  async run(message: Message, args: [User], flags: Map<string, string>) {
+  async run(message: Message, args: [User]) {
     try {
       const user = (args[0] || message.author);
       const member = await message.guild.members.fetch(user.id);
