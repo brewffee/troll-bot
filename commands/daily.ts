@@ -35,7 +35,7 @@ export const DailyCommand = new TrollCommand(client, {
           { 
             $set: { 
               balance: (user.balance + 250) - deduction ,
-              //lastDaily: Date.now()
+              lastDaily: Date.now()
             } 
           }
         );
