@@ -10,7 +10,7 @@ export const BegCommand = new TrollCommand(client, {
     let user = await UserData.findOne({ id: message.author.id });
     
     // TODO: move success chance to config
-    let isSuccessful = Math.random() < 0.3;
+    let isSuccessful = Math.random() > 0.3;
 
     let people = client.config.beggars;
     let actions = client.config.begActions;
@@ -30,7 +30,7 @@ export const BegCommand = new TrollCommand(client, {
     ];
 
     // If the beg is sucessful or if you have coins to steal, construct the response as normal
-    let response = `**${person}** ${action} **${amount}** coins `;
+    let response = `**${person}** ${action} **${amount}** coins`;
     if (!isSuccessful) response += client.config.troll;
 
     // If you lose all of your money or don't have any money at all, construct differently
