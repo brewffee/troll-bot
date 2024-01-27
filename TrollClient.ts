@@ -1,42 +1,36 @@
-import { BufferResolvable, Client, Collection, EmojiResolvable, RoleResolvable, Snowflake, TextChannel } from 'discord.js';
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+import * as Discord from 'discord.js';
 import { readdir } from 'fs';
+import mongoose from 'mongoose';
 import { TrollCommand } from './TrollCommand';
 import { TrollEvent } from './TrollEvent';
 import { config } from './config';
-import mongoose from 'mongoose';
 import { ReminderFormat } from './models/Reminder';
 import { checkReminders, loadReminders } from './util/remind';
 
 export interface TrollConfig {
-  troll: EmojiResolvable;
-  suffix: string;
-  cake: EmojiResolvable;
-  coin: EmojiResolvable;
-  reddit: EmojiResolvable[];
-  general: Snowflake;
-  responses: Array<[RegExp, string, BufferResolvable?]>;
-  botRole: RoleResolvable;
-  memberRole: RoleResolvable;
-  adminRole: RoleResolvable;
-  modRole: RoleResolvable;
+  troll: Discord.EmojiResolvable;
+  suffix: string; // TODO: Add suffix support
+  cake: Discord.EmojiResolvable;
+  coin: Discord.EmojiResolvable;
+  reddit: Discord.EmojiResolvable[];
+  general: Discord.Snowflake;
+  responses: Array<[RegExp, string, Discord.BufferResolvable?]>;
+  botRole: Discord.RoleResolvable;
+  memberRole: Discord.RoleResolvable;
+  adminRole: Discord.RoleResolvable;
+  modRole: Discord.RoleResolvable;
 
   eightball: string[];
   beggars: string[];
   begActions: { [key: string]: string[] };
-
-  // object:{
-  //  bills: {
-   //   message: 'ouch! you\'re super behind on your bills!\n*100 coins from your daily were paid to compensate*\n\n',
-  //    amount: 100,
-   //  chance: 0.1,
-  //   },
-
   dailyEvents: { [key: string]: { message: string; amount: number; chance: number } };
 }
 
-export class TrollClient extends Client {
-  public commands = new Collection<string, TrollCommand>();
-  public reminders = new Collection<string, ReminderFormat>();
+export class TrollClient extends Discord.Client {
+  public commands = new Discord.Collection<string, TrollCommand>();
+  public reminders = new Discord.Collection<string, ReminderFormat>();
   public config!: TrollConfig;
   public db: mongoose.Connection;
 
@@ -64,9 +58,9 @@ export class TrollClient extends Client {
     });
 
     // Connect db and login
-    mongoose.connect(process.env.MONGO_CONNECTION_STRING);
+    mongoose.connect(process.env.MONGO_CONNECTION_STRING as string);
     this.db = mongoose.connection;
-    this.login().then(() => this.guilds.cache.first().members.fetch({ force: true }));
+    this.login();
 
     // Load all reminders and start the check interval
     loadReminders().then(() => checkReminders()); /* 1000ms */

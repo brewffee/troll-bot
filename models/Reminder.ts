@@ -1,4 +1,4 @@
-import { Snowflake, TextChannel } from 'discord.js';
+import { Snowflake } from 'discord.js';
 import mongoose from 'mongoose';
 
 export interface ReminderFormat extends mongoose.Document {
@@ -19,4 +19,4 @@ const reminderSchema = new mongoose.Schema({
     direct: Boolean,
 });
 
-export const Reminder = mongoose.model<ReminderFormat>("reminder", reminderSchema, "reminder");
+export const Reminder = mongoose.model<ReminderFormat>('reminder', reminderSchema, 'reminder');

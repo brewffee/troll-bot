@@ -7,47 +7,49 @@ export const BegCommand = new TrollCommand(client, {
   name: 'beg',
   description: 'ask for money (L poor)',
   async run(message: Message) {
-    try {
-      let user = await UserData.findOne({ id: message.author.id });
+    let user = await UserData.findOne({ id: message.author.id });
+    
+    // TODO: move success chance to config
+    let isSuccessful = Math.random() < 0.3;
 
-      // 3/4 chance of success
-      let isSuccessful = Math.random() < 0.75;
+    let people = client.config.beggars;
+    let actions = client.config.begActions;
 
-      let people = client.config.beggars;
-      let actions = client.config.begActions;
+    let amounts = [       // 1-9
+      ...Array.from(new Array(21), (_, i) => 10 + i * 2),     // 10-50 ( increments of 2 )
+      ...Array.from(new Array(18), (_, i) => 75 + i * 25),    // 75-500 ( increments of 25 )
+    ];
 
-      let amounts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 22, 25, 30, 32, 36, 40, 45, 50, 56, 100, 125, 150, 200, 250, 500];
+    // The array for constructing the message depends on the outcome 
+    let actionArr = isSuccessful ? actions.successful : actions.unsuccessful;
 
-      let outcome = [
-        people[Math.floor(Math.random() * people.length)], // person
-        isSuccessful 
-        ? actions.successful[Math.floor(Math.random() * actions.successful.length)] 
-        : actions.unsuccessful[Math.floor(Math.random() * actions.unsuccessful.length)], // gave you/took your
-        amounts[Math.floor(Math.random() * amounts.length)] // X coins
-      ];
+    let [person, action, amount]: [string, string, number] = [
+      people[Math.floor(Math.random() * people.length)],        // person
+      actionArr[Math.floor(Math.random() * actionArr.length)],  // gave you/took your
+      amounts[Math.floor(Math.random() * amounts.length)]       // X coins
+    ];
 
-      let response = `**${outcome[0]}** ${outcome[1]} **${outcome[2]}** coins `;
-      if (!isSuccessful) response += client.config.troll;
+    // If the beg is sucessful or if you have coins to steal, construct the response as normal
+    let response = `**${person}** ${action} **${amount}** coins `;
+    if (!isSuccessful) response += client.config.troll;
 
-      await UserData.findOneAndUpdate(
-        { id: message.author.id }, 
-        (isSuccessful) ? { $set: { balance: user.balance + (outcome[2] as number) } }
-        : { $set: { balance: outcome[2] > user.balance ? 0 : user.balance - (outcome[2] as number)} }
-      );
-
-      if (outcome[2] > user.balance && user.balance > 0) {
-        response = response.replace(`**${outcome[2]}**`, `**${user.balance}**`);
-      } else if (user.balance === 0) {
-        // bro is broke
-        response = `**${outcome[0]}** tried to rob you of your money, but you're broke as fuck! lmfao !!!`;
-      }
-
-      message.channel.send(response);
-      
-    } catch (error) {
-      return { code: 'ERROR', error: error };
-    } finally {
-      return { code: 'INFO', details: `${message.member} ran command "${(this as any).info.name}"` };
+    // If you lose all of your money or don't have any money at all, construct differently
+    if (!isSuccessful && amount > user.balance && user.balance > 0) {
+      response = response.replace(`**${amount}**`, `**${user.balance}**`);
+    } else if (!isSuccessful && user.balance === 0) {
+      return message.channel.send(`**${person}** tried to rob you of your money, but you're broke as fuck! lmfao !!!`);
     }
+
+    // Update the user in the database and send the message
+    await UserData.findOneAndUpdate(
+      { id: message.author.id }, 
+      { $set: { 
+        balance: isSuccessful
+          ? (user.balance + amount)
+          : (amount > user.balance ? 0 : user.balance - amount)
+      } }
+    );
+
+    message.channel.send(response);
   }
 });

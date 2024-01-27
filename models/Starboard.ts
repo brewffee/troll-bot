@@ -15,4 +15,4 @@ const StarboardSchema = new mongoose.Schema({
   star_count: Number,
 });
 
-export const starboard = mongoose.model<StarboardFormat>("starboard", StarboardSchema, "starboard");
+export const starboard = mongoose.model<StarboardFormat>('starboard', StarboardSchema, 'starboard');

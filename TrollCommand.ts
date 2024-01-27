@@ -1,4 +1,4 @@
-import { DiscordAPIError, GuildChannel, GuildMember, Message, PermissionResolvable, Role, ThreadChannel, User } from 'discord.js';
+import * as Discord from 'discord.js';
 import { TrollClient } from './TrollClient';
 
 interface CommandOptions {
@@ -8,8 +8,8 @@ interface CommandOptions {
   usage?: string;
   nsfw?: boolean;
   permissions?: {
-    client?: PermissionResolvable[];
-    user?: PermissionResolvable[];
+    client?: Discord.PermissionResolvable[];
+    user?: Discord.PermissionResolvable[];
   };
   accessibility?: {
     guildOnly?: boolean;
@@ -19,23 +19,34 @@ interface CommandOptions {
   };
   arguments?: Argument[];
 
-  run: (message: Message, args: any, flags: Map<string, string>) => Promise<Result | undefined>;
+  // run isnt used past execution, so typing as any here is fine.
+  run: (message: Discord.Message, args: ArgumentType[], flags: Map<string, string>) => any; 
 }
 
 export class TrollCommand {
   public info: CommandOptions;
-  public isAuthorized: Function;
-  public run: Function;
+  public isAuthorized: ({ member, guild }: Discord.Message) => boolean;
+  public run: CommandOptions['run'];
+
   constructor(client: TrollClient, info: CommandOptions) {
     Object.defineProperty(this, 'client', { value: client, enumerable: false });
     this.info = info;
     this.info.arguments = info.arguments?.map((argument) => ({ required: true, ...argument })) ?? [];
+    
+    // Generate usage from command name and arguments
+    // TODO: Add prefix support
     this.info.usage = this.info.name;
     this.info.arguments?.forEach(a => this.info.usage += a.required ? ` <${a.name}>` : ` [${a.name}]`);
-    this.info.usage += ':troll:';
+    this.info.usage += /* client.config.suffix */ ':troll~1:' // find a better way to support emoji suffixes
     this.run = info.run;
-    this.isAuthorized = ({ member, guild }: Message): boolean => {
-      let authorized: boolean = false;
+
+    // Checks if the user has permission to execute the command before running. This 
+    // checks CommandOptions.permissions and CommandOptions.accessibility as defined
+    // above.
+    this.isAuthorized = ({ member, guild }) => {
+      let authorized = false;
+
+      // Role requirement checks
       if (!this.info.accessibility) {
         authorized = true;
       } else if (this.info.accessibility.owner) {
@@ -46,6 +57,7 @@ export class TrollCommand {
         authorized = member!.roles.cache.some((r) => [client.config.adminRole, client.config.modRole].includes(r.id)) || member!.id === guild!.ownerId;
       }
 
+      // Permission requirement check 
       if (authorized && this.info.permissions) {
         authorized = member!.permissions.has(this.info.permissions!.user!, true);
       }
@@ -55,18 +67,22 @@ export class TrollCommand {
   }
 }
 
+// Deprecated, will likely remove or repurpose at some point
 export interface Result {
   code: string;
   details?: string;
-  error?: Error | DiscordAPIError;
+  error?: Error | Discord.DiscordAPIError;
 }
 
+// TODO: flag resolution
+export interface Flag { }
+
+// Object in CommandOptions for retrieving arguments
 export interface Argument {
   name: string;
   type: 'STRING' | 'NUMBER' | 'MEMBER' | 'USER' | 'CHANNEL' | 'ROLE';
   required?: boolean;
 }
 
-export interface Flag { }
-
-export type ArgumentType = string | number | GuildMember | User | GuildChannel | ThreadChannel | Role | null | undefined;
+// Object in CommandOptions.run for retrieving resolved argument objects
+export type ArgumentType = string | number | Discord.GuildMember | Discord.User | Discord.Channel | Discord.Role | null | undefined;

@@ -1,7 +1,7 @@
 // THANKS SIRH FOR ALL CODE BELOW
 // https://github.com/OfficialSirH
 
-import { Snowflake } from "discord.js";
+import { Snowflake } from 'discord.js';
 
 // QUICK SORT ALGORITHM BELOW
 export const quickSort = (list: [Snowflake, number][], left: number, right: number) => {
@@ -26,8 +26,8 @@ const swap = (list: [Snowflake, number][], leftIndex: number, rightIndex: number
 };
 
 const partition = (list: [Snowflake, number][], left: number, right: number) => {
-  let pivot = list[Math.floor((right + left) / 2)][1],
-    i = left,
+  const pivot = list[Math.floor((right + left) / 2)][1];
+  let i = left,
     j = right;
   while (i <= j) {
     while (list[i][1] > pivot) {

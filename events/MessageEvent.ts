@@ -8,20 +8,24 @@ export const MessageEvent = new TrollEvent(client, {
   description: 'Emitted when there\'s a message, duh.',
   type: 'messageCreate',
   run: async (client: TrollClient, message: Message) => {
+    // Ignore messages from bots and system messages
+    // TODO: start accepting dm messages, requires some reworking
     if (message.author.bot || !message.member || message.system) return;
 
     // REACTIONS
-    if (/(toledo)|(csh)|(car seat headrest)/gi.test(message.content)) {
+    // TODO: move to config 
+    if (/(toledo)|(csh)|(car seat headrest)/gi.test(message.content))
       message.react('<:downvote:875415662489653289>');
-    }
-    if (/(((da+y) of )?(bi+r+(th?|f)))|((bi+r+(th?|f))(-| )?)|(ca+ke+\9?)|b(-| )?da+y/gi.test(message.content)) {
+    if (/(((da+y) of )?(bi+r+(th?|f)))|((bi+r+(th?|f))(-| )?)|(ca+ke+\9?)|b(-| )?da+y/gi.test(message.content))
       message.react(client.config.cake);
-    }
+
+    // TODO: move reaction chance to config
+    // TODO: don't rely on reddit, name the config key something else
     Math.floor(Math.random() * 10) === 1
       ? message.react(client.config.reddit[Math.floor(Math.random() * 4)])
       : null
 
-    // XP
+    // MESSAGE XP
     client.emit('messageXP', message);
 
     // RESPONDER
@@ -29,42 +33,43 @@ export const MessageEvent = new TrollEvent(client, {
       return client.emit('responder', message);
       
     // COMMANDS
+    // Extract the command, along with its args and flags, from the message content
+    // TODO: add prefix support, and ensure 
     const data = message.content.replace(client.config.suffix, '').trim().split(/ +/g);
-    const [args, flags] = data.slice(1).reduce(
-      ([args, flags], argument) => {
+    const [args, flags] = data.slice(1).reduce(([args, flags], argument) => {
         const match = /^(--?)([\w\d]+)(?:=(.+))?$/.exec(argument);
         if (match) flags?.set(match[2].toLowerCase(), match[3] || true);
-        else args.push(argument);
+        else (args as string[]).push(argument);
         return [args, flags];
       },
-      [new Array(), new Map()]
+      [[], new Map()]
     );
+
+    // Check for the command in the client's Collection and resolve its arguments
+    // TODO: resolve flags
     const commandName = data[0].toLowerCase();
     const command = client.commands.get(commandName) ?? client.commands.find(({ info: { aliases } }) => !!aliases?.includes(commandName));
-    /*console.log({
-      args: args,
-      commandName: commandName,
-      isCommand: Boolean(command),
-      flags: flags,
-    });*/
-
-    if (!command) return;
-    // define a variable from the command's return value and create a logger later :)
-    // finally making SOME use of Result type LOL
+    if (!command || !command.isAuthorized(message)) return;
     const resolved = await Promise.all(resolveArguments(args, command, message));
-    command.isAuthorized(message) ? console.log(await command.run(message, resolved, flags)) : message.channel.send('you cant do that buddy');
+
+    // Run the command and report timings/errors
+    const start = performance.now();
+    command.run(message, resolved, flags).catch(e => console.log(`[${commandName}] Ran erroneously, error shown below:\n${e}`));
+    const end = performance.now();
+    console.log(`[${commandName}] Ran successfully, took ${end - start} ms`);
   },
 });
 
+// Resolves given arguments into usable objects 
 const resolveArguments = (args: string[], command: TrollCommand, message: Message): Promise<ArgumentType>[] => {
   return args.map(async (argument: string, index) => {
-    const argumentType = command.info.arguments![index]?.type;
+    const argumentType = command.info.arguments?.[index]?.type ?? false;
     if (!argumentType) return null;
     switch (argumentType) {
       case 'STRING': {
         return argument;
       }
-      case 'NUMBER': {
+      case 'NUMBER': { // Should we be rounding these ?
         return Math.round(Number(argument)) || null;
       }
       case 'CHANNEL': {
@@ -85,8 +90,11 @@ const resolveArguments = (args: string[], command: TrollCommand, message: Messag
           mention || id
             ? argumentType === 'USER'
               ? message.client.users.fetch((mention ?? id)!)
-              : message.guild.members.fetch((mention ?? id)!)
-            : message.guild.members
+              : message.guild?.members.fetch((mention ?? id)!)
+            : null;
+            // Disabling the string search for now as it is looser than I'd prefer
+            // Use string comparison later
+            /*message.guild?.members
               .fetch({ query: argument, limit: 1 })
               .then((members) => {
                 const member = members.first();
@@ -94,7 +102,7 @@ const resolveArguments = (args: string[], command: TrollCommand, message: Messag
                 if (argumentType === 'USER') return member?.user;
                 return member;
               })
-              .catch(() => null);
+              .catch(() => null);*/
         return memberOrUser;
       }
     }

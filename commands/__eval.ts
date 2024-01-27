@@ -2,7 +2,7 @@ import { Message } from 'discord.js';
 import { client } from '../TrollClient';
 import { TrollCommand } from '../TrollCommand';
 
-export const TestCommand = new TrollCommand(client, {
+export const EvalCommand = new TrollCommand(client, {
   name: 'eval',
   aliases: ['e'],
   description: 'evaluates code',
@@ -10,25 +10,23 @@ export const TestCommand = new TrollCommand(client, {
     owner: true,
   },
   async run(message: Message, _args, flags: Map<string, string>) {
-    try {
-      // redefine args
-      const args = message.content.slice(1, message.content.length - (client.config.troll as string).length).trim()
-      .split(/ +/g).filter((a) => !/^--(.*)/.test(a));
-      try {
+    const args = message.content.slice(1, message.content.length - (client.config.troll as string).length).trim()
+    .split(/ +/g).filter((a) => !/^--(.*)/.test(a));
 
-        console.log(flags)
-        const res = require('util').inspect(
-          await eval(`(async()=>{ ${flags.get('m') ? '' : 'return'} ${args.join(' ')}; })();`),
-          { depth: 0 }).toString().replace(message.client.token, '').replace(/`/g, '`\u200b');
-        message.channel.send((res.toString().length >= 2000) ? `rats, its too long.` : res);
-      } catch (error) {
-        message.channel.send(`oops!\n${error.toString().replace(/`/g, '`\u200b')}`);
-      }
-      return;
+    try {
+      // Eval code and filter out client token
+      const evaluation = await eval(`(async()=>{ ${flags.get('m') ? '' : 'return'} ${args.join(' ')}; })();`);
+      const res: string = require('util').inspect(evaluation,{ depth: 0 }).toString()
+      .replace(message.client.token, '').replace(/`/g, '`\u200b');
+
+      // If you really need to eval something more than 2000 characters, you can edit the 
+      // bot manually. This isn't part of the bot's main feature set, so it won't be 
+      // supported by default.
+      message.channel.send((res.length >= 2000) ? 'rats, its too long.' : res);
     } catch (error) {
-      return { code: 'ERROR', error: error };
-    } finally {
-      return { code: 'INFO', details: `${message.member} ran command "${(this as any).info.name}"` };
+      message.channel.send(`oops!\n${error.toString().replace(/`/g, '`\u200b')}`);
     }
+    
+    return;
   }
 });

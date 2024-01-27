@@ -69,7 +69,6 @@ export const getPlaceString = (place: number) => {
 // Similar to getLeaderboard() above, gets the top 10 users
 // in the database and sorts them instead by their coins
 export const getRichest = async () => {
-
   const users = await UserData.find({});
   const sorted = quickSort(users.map(shitter => [shitter.id, shitter.balance]), 0, users.length - 1);
   const topTen = sorted.filter((_, i) => i < 10);
@@ -80,15 +79,15 @@ export const getRichest = async () => {
     if (balance <= 0) return string;
 
     let place: string;
-    const pos = topTen.findIndex(item => item[0] === id) + 1;
-    if (pos < 4) place = `${awards[pos - 1]} `;
-    else place = `**${pos}.** `;
+    const pos = topTen.findIndex(item => item[0] === id);
+    if (pos < awards.length) place = `${awards[pos]} `;
+    else place = `**${pos + 1}.** `;
 
     // If we can't fetch the user for some reason, fallback to their ID
     const user = (await client.users.fetch(id))?.tag || `Unknown (${id})`;
 
     // TODO: allow flipping of currency symbol placement
-    return str + `${place} **${user}** - ${client.config.coin} **${humanize(balance)}**\n`;
+    return string + `${place} **${user}** - ${client.config.coin} **${humanize(balance)}**\n`;
   }, Promise.resolve(''));
 
   return leaderboard;
@@ -99,11 +98,11 @@ export const getRichest = async () => {
 export const getEcoStats = async (user: Snowflake) => {
   const users = await UserData.find({});
   const sorted = quickSort(users.map(shitter => [shitter.id, shitter.balance]), 0, users.length - 1);
-  const myStats = sorted.find(item => item[0] === user);
+  const userStats = sorted.find(item => item[0] === user) ?? [false];
 
   return {
     place: sorted.findIndex(item => item[0] === user) + 1,
-    balance: myStats[1]
+    balance: userStats[1] ?? 0
   };
 }
 

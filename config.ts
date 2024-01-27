@@ -1,4 +1,4 @@
-import { TrollConfig } from "./TrollClient";
+import { TrollConfig } from './TrollClient';
 
 export const config: TrollConfig = {
   troll: '<:troll:891744450752163891>',
@@ -138,6 +138,24 @@ export const config: TrollConfig = {
     'Mr. Incredible',
     'Uncanny Mr. Incredible',
     'mr fortnite, the creator of fortnite',
+    'the dirt man',
+    'jojo',
+    'red angry bird',
+    'Neco Arc',
+    'Wii Fit Trainer',
+    'Meowscles',
+    'Spiderman-2099',
+    'Miles Morales',
+    'Meowles Morales',
+    'Zavala',
+    'Builderman',
+    'Mr. Worldwide',
+    '2x4 Red Lego Brick #3001',
+    'Hank Schrader',
+    'Llamar Davis',
+    'berbdabee',
+    'a lootbug',
+    'Toriel'
   ],
 
   begActions: {
@@ -153,7 +171,6 @@ export const config: TrollConfig = {
       'handed you a briefcase containing',
       'awarded you a whopping',
       'presented you with',
-      'asked you to sing a song. you did well, and they gave you',
       'gave you a reddit gold and',
       'gave you a reddit platinum and',
       'gave you a reddit silver and',

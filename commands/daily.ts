@@ -8,45 +8,36 @@ export const DailyCommand = new TrollCommand(client, {
   aliases: ['d', '24', 'collect'],
   description: 'collect your daily coins',
   async run(message: Message) {
-    try {
-      const user = await UserData.findOne({ id: message.author.id });
+    const user = await UserData.findOne({ id: message.author.id });
 
-      const randomEvent = () => {
-        const events = Object.keys(client.config.dailyEvents);        
-        return client.config.dailyEvents[events[Math.floor(Math.random() * 10)]];
-      }; 
-      
-      if ((Date.now() - user.lastDaily) >= (1000 * 60 * 60 * 24)) {
-        let chosen = randomEvent();
-        let msg = 'heres ya daily **250** coins';
-        let deduction = 0;
+    // A random unlucky event to occur when running the daily command
+    const randomEvent = () => {
+      const events = Object.keys(client.config.dailyEvents);        
+      return client.config.dailyEvents[events[Math.floor(Math.random() * 10)]];
+    }; 
 
-        if (chosen) {
-          // Bad luck !
-          msg = chosen.message + msg;
-          deduction = chosen.amount;
-        }
-        console.log(chosen);
+    // If the user is eligible for recieving their daily payout ...
+    if ((Date.now() - user.lastDaily) >= (1000 * 60 * 60 * 24)) {
+      let event = randomEvent();
+      let msg = 'heres ya daily **250** coins';
+      let deduction = 0;
 
-        message.channel.send(msg);
-
-        await UserData.findOneAndUpdate(
-          { id: message.author.id }, 
-          { 
-            $set: { 
-              balance: (user.balance + 250) - deduction ,
-              lastDaily: Date.now()
-            } 
-          }
-        );
-      } else {
-        message.channel.send(`you collected your daily <t:${Math.trunc(user.lastDaily / 1000)}:R>, chill out`);
+      if (event) {
+        msg = event.message + msg;
+        deduction = event.amount;
       }
 
-    } catch (error) {
-      return { code: 'ERROR', error: error };
-    } finally {
-      return { code: 'INFO', details: `${message.member} ran command "${(this as any).info.name}"` };
+      await UserData.findOneAndUpdate(
+        { id: message.author.id }, 
+        { $set: { 
+            balance: (user.balance + 250) - deduction ,
+            lastDaily: Date.now()
+        } }
+      );
+
+      message.channel.send(msg);
+    } else {
+      message.channel.send(`you collected your daily <t:${Math.trunc(user.lastDaily / 1000)}:R>, chill out`);
     }
   }
 });
