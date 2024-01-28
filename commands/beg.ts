@@ -37,7 +37,11 @@ export const BegCommand = new TrollCommand(client, {
     if (!isSuccessful && amount > user.balance && user.balance > 0) {
       response = response.replace(`**${amount}**`, `**${user.balance}**`);
     } else if (!isSuccessful && user.balance === 0) {
-      return message.channel.send(`**${person}** tried to rob you of your money, but you're broke as fuck! lmfao !!!`);
+      // return message.channel.send(`**${person}** tried to rob you of your money, but you're broke as fuck! lmfao !!!`);
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: `**${person}** tried to rob you of your money, but you're broke as fuck! lmfao !!!`
+      });
     }
 
     // Update the user in the database and send the message
@@ -50,6 +54,10 @@ export const BegCommand = new TrollCommand(client, {
       } }
     );
 
-    message.channel.send(response);
+    // message.channel.send(response);
+    return message.reply({ 
+      allowedMentions: { repliedUser: false },
+      content: response
+    });
   }
 });

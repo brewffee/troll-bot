@@ -13,6 +13,11 @@ export const HelpCommand = new TrollCommand(client, {
       if (accessibility?.owner) return;
       list += `**${name}** [\`${usage}\`] - ${description}\n`;
     });
-    message.channel.send(list);
+
+    return message.reply({ 
+      allowedMentions: { repliedUser: false },
+      content: list
+    });
+    // message.channel.send(list);
   }
 });

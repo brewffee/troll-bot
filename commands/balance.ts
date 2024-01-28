@@ -11,7 +11,11 @@ export const BalanceCommand = new TrollCommand(client, {
   arguments: [{ name: 'User', type: 'MEMBER', required: false }],
   async run(message: Message, args: [GuildMember]) {
     if (args[0] === null) {
-      return message.channel.send('i don\'t know who that is, sorry');
+      // return message.channel.send('i don\'t know who that is, sorry');
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: "i don't know who that is, sorry"
+      });
     }
     
     const member = args[0] || message.member;
@@ -21,14 +25,30 @@ export const BalanceCommand = new TrollCommand(client, {
 
     // If balance is none , 0 , or negative
     if (balance === null) {
-      return message.channel.send(`${name} don\'t seem to have a wallet, get out there and make some bank first`)
+      //return message.channel.send(`${name} don\'t seem to have a wallet, get out there and make some bank first`)
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: `${name} don\'t seem to have a wallet, get out there and make some bank first`
+      });
     } else if (balance === 0) {
-      return message.channel.send(`${name} broke as fuck!`);
+      //return message.channel.send(`${name} broke as fuck!`);
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: `${name} broke as fuck!`
+      });
     } else if (balance < 0) {
-      return message.channel.send(`${name} got a negative balance of ${client.config.coin} **${humanize(balance)}**, yikes`)
+      //return message.channel.send(`${name} got a negative balance of ${client.config.coin} **${humanize(balance)}**, yikes`)
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: `${name} got a negative balance of ${client.config.coin} **${humanize(balance)}**, yikes`
+      });
     }
 
     // Should we add leaderboard placement (like in XPCommand) ?
-    message.channel.send(`${name} got ${client.config.coin} **${humanize(balance)}** in the bank 😎`);
+    // message.channel.send(`${name} got ${client.config.coin} **${humanize(balance)}** in the bank 😎`);
+    return message.reply({ 
+      allowedMentions: { repliedUser: false },
+      content: `${name} got ${client.config.coin} **${humanize(balance)}** in the bank 😎`
+    });
   }
 });

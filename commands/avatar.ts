@@ -18,7 +18,12 @@ export const AvatarCommand = new TrollCommand(client, {
       dynamic: true,
     });
   
-    message.channel.send({
+    //message.channel.send({
+    //  content: 'lol look at this clown',
+    //  files: [new MessageAttachment(avatar)],
+    //});
+    return message.reply({ 
+      allowedMentions: { repliedUser: false },
       content: 'lol look at this clown',
       files: [new MessageAttachment(avatar)],
     });

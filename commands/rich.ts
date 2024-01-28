@@ -10,7 +10,12 @@ export const LeaderboardCommand = new TrollCommand(client, {
   async run(message: Message) {
     const stats = await getEcoStats(message.author.id);
     const lb = await getRichest();
-    message.channel.send(`${lb}\n\nyou're in **${getPlaceString(stats.place)}** with ${client.config.coin} **${humanize(stats.balance)}**`);
+
+    // message.channel.send(`${lb}\n\nyou're in **${getPlaceString(stats.place)}** with ${client.config.coin} **${humanize(stats.balance)}**`);
+    return message.reply({ 
+      allowedMentions: { repliedUser: false },
+      content: `${lb}\n\nyou're in **${getPlaceString(stats.place)}** with ${client.config.coin} **${humanize(stats.balance)}**`
+    });
   }
 });
 

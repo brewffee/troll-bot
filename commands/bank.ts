@@ -13,8 +13,12 @@ export const WithdrawCommand = new TrollCommand(client, {
 
     // A The user must have money in their vault
     if (!user.vault || user.vault === 0) {
-      message.channel.send('there\'s no money in your bank');// use currency later
-      return;
+      // message.channel.send('there\'s no money in your bank');// use currency later
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: "there's no money in your bank"
+      });
     } 
 
     // Amount of money in the vault
@@ -28,6 +32,10 @@ export const WithdrawCommand = new TrollCommand(client, {
 
     let hasIncreased = starting === value;
 
-    message.channel.send(`you have **${value}** coins in your vault ${hasIncreased ? "" : `( compared to your initial ${starting}, that's a ${percent}% increase )`}`);
+    // message.channel.send(`you have **${value}** coins in your vault ${hasIncreased ? "" : `( compared to your initial ${starting}, that's a ${percent}% increase )`}`);
+    return message.reply({ 
+      allowedMentions: { repliedUser: false },
+      content: `you have **${value}** coins in your vault ${hasIncreased ? "" : `( compared to your initial ${starting}, that's a ${percent}% increase )`}`
+    });
   }
 });

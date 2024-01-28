@@ -17,17 +17,33 @@ export const DonateCommand = new TrollCommand(client, {
     // A few checks before proceeding: The user must specify how much 
     // money, have said money, and mention someone
     if (user.balance <= 0) {
-      message.channel.send('you dont have any money to give away nimbus');
-      return;
+      // message.channel.send('you dont have any money to give away nimbus');
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: 'you dont have any money to give away nimbus'
+      });
     } else if (!args[0]) {
-      message.channel.send('you cant send money to nobody :/');
-      return;
+      // message.channel.send('you cant send money to nobody :/');
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: 'you cant send money to nobody :/'
+      });
     } else if (user.balance < args[1]) {
-      message.channel.send('you cant hand out that kinda money');
-      return;
+      // message.channel.send('you cant hand out that kinda money');
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: 'you cant hand out that kinda money'
+      });
     } else if (!args[1]) {
-      message.channel.send('you gotta say how much');
-      return;
+      // message.channel.send('you gotta say how much');
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: 'you gotta say how much'
+      });
     }
 
     // Transfer money to the destination user 
@@ -43,6 +59,10 @@ export const DonateCommand = new TrollCommand(client, {
       { $set: { balance: user.balance - args[1] } }
     );
 
-    message.channel.send(`you generously gave ${client.config.coin} **${args[1]}** to **${args[0].username}** :)`);
+    // message.channel.send(`you generously gave ${client.config.coin} **${args[1]}** to **${args[0].username}** :)`);
+    return message.reply({ 
+      allowedMentions: { repliedUser: false },
+      content: `you generously gave ${client.config.coin} **${args[1]}** to **${args[0].username}** :)`
+    });
   }
 });

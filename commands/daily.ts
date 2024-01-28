@@ -35,9 +35,16 @@ export const DailyCommand = new TrollCommand(client, {
         } }
       );
 
-      message.channel.send(msg);
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: msg
+      });
     } else {
-      message.channel.send(`you collected your daily <t:${Math.trunc(user.lastDaily / 1000)}:R>, chill out`);
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: `you collected your daily <t:${Math.trunc(user.lastDaily / 1000)}:R>, chill out`
+      });
+      // message.channel.send(`you collected your daily <t:${Math.trunc(user.lastDaily / 1000)}:R>, chill out`);
     }
   }
 });

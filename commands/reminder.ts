@@ -29,6 +29,10 @@ export const ReminderCommand = new TrollCommand(client, {
 
     // add to client.reminders
     client.reminders.set(rm.id, rm);
-    message.channel.send(`ok i'll remind you ${msg} in ${ms(offset, { long: true })}`);
+    // message.channel.send(`ok i'll remind you ${msg} in ${ms(offset, { long: true })}`);
+    return message.reply({ 
+      allowedMentions: { repliedUser: false },
+      content: `ok i'll remind you ${msg} in ${ms(offset, { long: true })}`
+    });
   }
 });

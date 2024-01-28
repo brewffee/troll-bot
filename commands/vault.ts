@@ -15,17 +15,33 @@ export const VaultCommand = new TrollCommand(client, {
     // A few checks before proceeding: The user must specify how much 
     // money, and have said money
     if (user.balance <= 0) {
-      message.channel.send('you don\'t have any money to deposit right now');// use currency later
-      return;
+      // message.channel.send('you don\'t have any money to deposit right now');// use currency later
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: "you don't have any money to deposit right now",
+      });
     } else if (args[0] <= 0) {
-      message.channel.send('you really think you\'re a funny guy huh');
-      return
+      // message.channel.send('you really think you\'re a funny guy huh');
+      // return
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: "you really think you're a funny guy huh",
+      });
     } else if (!args[0]) {
-      message.channel.send('you gotta say how much');
-      return;
+      // message.channel.send('you gotta say how much');
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: 'you gotta say how much',
+      });
     } else if (user.balance < args[0]) {
-      message.channel.send('you cant deposit more than what you have');
-      return;
+      // message.channel.send('you cant deposit more than what you have');
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: 'you cant deposit more than what you have',
+      });
     }
     
     let current = user.vault;
@@ -51,6 +67,10 @@ export const VaultCommand = new TrollCommand(client, {
       }
     );
 
-    message.channel.send(`just deposited **${args[0]}** coins in your vault for you 👍 \nyou now have **${current + args[0]}** coins in the vault`);
+    // message.channel.send(`just deposited **${args[0]}** coins in your vault for you 👍 \nyou now have **${current + args[0]}** coins in the vault`);
+    return message.reply({ 
+      allowedMentions: { repliedUser: false },
+      content: `just deposited **${args[0]}** coins in your vault for you 👍 \nyou now have **${current + args[0]}** coins in the vault`,
+    });
   }
 });

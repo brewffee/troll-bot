@@ -14,17 +14,33 @@ export const WithdrawCommand = new TrollCommand(client, {
     // A few checks before proceeding: The user must specify how much 
     // money, and have said money in their vault
     if (!user.vault || user.vault === 0) {
-      message.channel.send('there\'s no money in your bank');// use currency later
-      return;
+      // message.channel.send('there\'s no money in your bank');// use currency later
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: "there's no money in your bank",
+      });
     } else if (args[0] <= 0) {
-      message.channel.send('you really think you\'re a funny guy huh');
-      return
+      // message.channel.send('you really think you\'re a funny guy huh');
+      // return
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: "you really think you're a funny guy huh",
+      });
     } else if (!args[0]) {
-      message.channel.send('you gotta say how much');
-      return;
+      // message.channel.send('you gotta say how much');
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: 'you gotta say how much',
+      });
     } else if (user.vault < args[0]) {
-      message.channel.send('you cant withdraw more than what you have');
-      return;
+      // message.channel.send('you cant withdraw more than what you have');
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: 'you cant withdraw more than what you have',
+      });
     }
 
     // Amount of money in the vault
@@ -46,6 +62,10 @@ export const WithdrawCommand = new TrollCommand(client, {
       }
     );
 
-    message.channel.send(`here's your **${earnings}** coins, straight from the bank 👍 \nyou now have **${current - args[0]}** coins in the vault`);
+    // message.channel.send(`here's your **${earnings}** coins, straight from the bank 👍 \nyou now have **${current - args[0]}** coins in the vault`);
+    return message.reply({ 
+      allowedMentions: { repliedUser: false },
+      content: `here's your **${earnings}** coins, straight from the bank 👍 \nyou now have **${current - args[0]}** coins in the vault`,
+    });
   }
 });

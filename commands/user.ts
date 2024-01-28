@@ -12,14 +12,26 @@ export const UserCommand = new TrollCommand(client, {
     const member = await message.guild?.members.fetch(user.id);
 
     if (!member) {
-      message.channel.send('if they\'re not in this server then idgaf');
-      return;
+      // message.channel.send('if they\'re not in this server then idgaf');
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: "if they're not in this server then idgaf"
+      });
     } else if (member.user.bot) {
-      message.channel.send('no bots (for now)');
-      return;
+      // message.channel.send('no bots (for now)');
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: 'no bots (for now)'
+      });
     } else if (!await getStats(user.id)) {
-      message.channel.send('their profile deadass dont exist yet');
-      return;
+      // message.channel.send('their profile deadass dont exist yet');
+      // return;
+      return message.reply({ 
+        allowedMentions: { repliedUser: false },
+        content: 'their profile deadass dont exist yet'
+      });
     }
 
     // debug above later ???
@@ -49,6 +61,10 @@ export const UserCommand = new TrollCommand(client, {
       ],
     })
 
-    message.channel.send({ embeds: [profileEmbed] });
+    // message.channel.send({ embeds: [profileEmbed] });
+    return message.reply({ 
+      allowedMentions: { repliedUser: false },
+      embeds: [profileEmbed],
+    });
   },
 });
