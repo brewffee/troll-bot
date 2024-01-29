@@ -42,7 +42,8 @@ export const GambleCommand = new TrollCommand(client, {
     }
     
     // if gamble amount is x value... vary answers (poor/rich)
-    if (Math.floor(Math.random() * 2) === 1) {
+    let isSuccessful = Math.random() > 0.5;
+    if (isSuccessful) {
       await UserData.findOneAndUpdate(
         { id: message.author.id },
         { 
