@@ -11,6 +11,12 @@ export const WithdrawCommand = new TrollCommand(client, {
   async run(message: Message, args: [number]) {
     const user = await UserData.findOne({ id: message.author.id });
 
+    // Multiply the amount given based on the amount of days
+    let daysSince = Math.floor(Math.abs((user.lastVaulted - Date.now())  / (1000 * 3600 * 24)));
+    let multiplier = 1 + (daysSince / 10);
+    let value = Math.floor(user.vault * multiplier);
+    let earnings = Math.floor(args[0] * multiplier);
+
     // A few checks before proceeding: The user must specify how much 
     // money, and have said money in their vault
     if (!user.vault || user.vault === 0) {
@@ -34,7 +40,7 @@ export const WithdrawCommand = new TrollCommand(client, {
         allowedMentions: { repliedUser: false },
         content: 'you gotta say how much',
       });
-    } else if (user.vault < args[0]) {
+    } else if (value < args[0]) {
       // message.channel.send('you cant withdraw more than what you have');
       // return;
       return message.reply({ 
@@ -44,13 +50,8 @@ export const WithdrawCommand = new TrollCommand(client, {
     }
 
     // Amount of money in the vault
-    let current = user.vault;
+    let current = value;
 
-    // Multiply the amount given based on the amount of days
-    let daysSince = Math.floor(Math.abs((user.lastVaulted - Date.now())  / (1000 * 3600 * 24)));
-    let multiplier = 1 + (daysSince / 10);
-    let earnings = Math.floor(args[0] * multiplier);
-    
     // Update the user in the database and send the message
     await UserData.findOneAndUpdate(
       { id: message.author.id }, 
